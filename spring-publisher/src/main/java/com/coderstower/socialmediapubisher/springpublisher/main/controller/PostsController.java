@@ -1,4 +1,4 @@
-package com.coderstower.socialmediapubisher.springpublisher.main;
+package com.coderstower.socialmediapubisher.springpublisher.main.controller;
 
 
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.PostPublisher;
@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
-//@RestController
+@RestController
+//@Component
 public class PostsController {
     private final PostPublisher postPublisher;
 
@@ -26,7 +27,7 @@ public class PostsController {
 
     @RequestMapping(path = "/posts/next", method = RequestMethod.POST)
     public String postNext() {
-        //postPublisher.next();
+        postPublisher.publishNext();
         return "OK";
     }
 }

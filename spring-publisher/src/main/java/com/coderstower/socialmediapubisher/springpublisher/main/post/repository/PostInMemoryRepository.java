@@ -14,7 +14,7 @@ public class PostInMemoryRepository implements PostRepository {
 
     @Override
     public Optional<Post> getNextToPublish() {
-        return postH2Repository.findTopByLastDatePublishedOrderByLastDatePublished()
+        return postH2Repository.findFirstByOrderByLastDatePublishedAsc()
                 .map(this::convert);
     }
 
