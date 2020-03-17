@@ -1,0 +1,1 @@
+INSERT INTO post_entity (id, name, description, tags, url, last_date_published) VALUES ('1', 'My Post 1', 'My first post', 'tag1,tag2', 'http://mypost.com/post1', '2012-09-17 18:47:52');

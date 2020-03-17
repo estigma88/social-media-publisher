@@ -1,17 +1,17 @@
 package com.coderstower.socialmediapubisher.springpublisher.main.factory;
 
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.repository.PostRepository;
-import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.repository.credential.Oauth1CredentialsRepository;
+import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.repository.credential.Oauth1CredentialsRepository;
 import com.coderstower.socialmediapubisher.springpublisher.main.post.repository.PostH2Repository;
 import com.coderstower.socialmediapubisher.springpublisher.main.post.repository.PostInMemoryRepository;
-import com.coderstower.socialmediapubisher.springpublisher.main.post.repository.credential.Oauth1CredentialH2Repository;
-import com.coderstower.socialmediapubisher.springpublisher.main.post.repository.credential.Oauth1CredentialInMemoryRepository;
+import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.repository.credential.Oauth1CredentialH2Repository;
+import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.repository.credential.Oauth1CredentialInMemoryRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "com.coderstower.socialmediapubisher.springpublisher.main.post.repository")
+@EnableJpaRepositories(basePackages = {"com.coderstower.socialmediapubisher.springpublisher.main.post.repository", "com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.repository.credential"})
 public class SpringPublisherRepositoryFactory {
     @Bean
     public Oauth1CredentialsRepository oauth1CredentialInMemoryRepository(Oauth1CredentialH2Repository oauth1CredentialH2Repository) {

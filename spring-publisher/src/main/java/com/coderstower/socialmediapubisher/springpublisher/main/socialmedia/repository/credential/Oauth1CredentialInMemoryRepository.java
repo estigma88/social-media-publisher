@@ -1,7 +1,7 @@
-package com.coderstower.socialmediapubisher.springpublisher.main.post.repository.credential;
+package com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.repository.credential;
 
-import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.repository.credential.Oauth1Credentials;
-import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.repository.credential.Oauth1CredentialsRepository;
+import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.repository.credential.Oauth1Credentials;
+import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.repository.credential.Oauth1CredentialsRepository;
 
 import java.util.Optional;
 

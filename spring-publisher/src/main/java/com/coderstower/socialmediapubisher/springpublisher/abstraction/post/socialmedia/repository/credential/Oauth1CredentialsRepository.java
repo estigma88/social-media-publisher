@@ -1,4 +1,4 @@
-package com.coderstower.socialmediapubisher.springpublisher.abstraction.post.repository.credential;
+package com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.repository.credential;
 
 import java.util.Optional;
 

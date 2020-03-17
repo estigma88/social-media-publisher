@@ -1,4 +1,4 @@
-package com.coderstower.socialmediapubisher.springpublisher.main.post.repository.credential;
+package com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.repository.credential;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -24,8 +24,7 @@ public class PostEntity {
     private String id;
     private String name;
     private String description;
-    @ElementCollection
-    private List<String> tags;
+    private String tags;
     private URL url;
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime lastDatePublished;
