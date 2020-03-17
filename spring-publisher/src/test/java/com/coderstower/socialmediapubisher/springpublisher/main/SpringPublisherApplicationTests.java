@@ -10,8 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -28,10 +27,12 @@ class SpringPublisherApplicationTests {
     }
 
     @Test
-    void publish() throws Exception {
+    void publish_twitter_success() throws Exception {
         mvc.perform(post("/posts/next")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .json("[{\"post\":{\"id\":\"1\",\"name\":\"My Post 1\",\"description\":\"My first post\",\"tags\":[\"tag1\",\"tag2\"],\"url\":\"http://mypost.com/post1\",\"lastDatePublished\":\"2012-09-17T18:47:52\"},\"status\":\"SUCCESS\",\"publisher\":\"twitter\"}]"));
     }
 
 }

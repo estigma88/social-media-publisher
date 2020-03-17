@@ -1,1 +1,3 @@
 INSERT INTO post_entity (id, name, description, tags, url, last_date_published) VALUES ('1', 'My Post 1', 'My first post', 'tag1,tag2', 'http://mypost.com/post1', '2012-09-17 18:47:52');
+
+INSERT INTO oauth1credential_entity (id, consumer_key, consumer_secret, access_token, token_secret) VALUES ('twitter', 'Consumer twitter', 'Consumer Secret twitter', 'Access Token twitter', 'Token Secret twitter');
