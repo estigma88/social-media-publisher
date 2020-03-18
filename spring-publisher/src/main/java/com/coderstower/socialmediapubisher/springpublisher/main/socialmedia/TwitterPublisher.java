@@ -1,20 +1,19 @@
 package com.coderstower.socialmediapubisher.springpublisher.main.socialmedia;
 
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.repository.Post;
-import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.repository.credential.Oauth1Credentials;
-import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.repository.credential.Oauth1CredentialsRepository;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.Acknowledge;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.PublishedPost;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.SocialMediaPublisher;
+import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.repository.credential.Oauth1Credentials;
+import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.repository.credential.Oauth1CredentialsRepository;
 import lombok.extern.slf4j.Slf4j;
 import twitter4j.Paging;
-import twitter4j.RateLimitStatus;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.auth.AccessToken;
 
-import java.util.Map;
+import java.util.List;
 import java.util.Objects;
 
 @Slf4j
@@ -43,9 +42,10 @@ public class TwitterPublisher implements SocialMediaPublisher {
         twitter.setOAuthAccessToken(accessToken);
 
         try {
-            Map<String, RateLimitStatus> status = twitter.getRateLimitStatus();
+            Paging paging = new Paging(1, 1);
+            List<Status> statuses = twitter.getHomeTimeline(paging);
 
-            if(Objects.nonNull(status)){
+            if(Objects.nonNull(statuses)){
                 return Acknowledge.builder()
                         .status(Acknowledge.Status.SUCCESS)
                         .build();
