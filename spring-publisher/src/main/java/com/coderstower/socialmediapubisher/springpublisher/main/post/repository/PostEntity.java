@@ -27,5 +27,5 @@ public class PostEntity {
     private String tags;
     private URL url;
     @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime lastDatePublished;
+    private LocalDateTime publishedDate;
 }

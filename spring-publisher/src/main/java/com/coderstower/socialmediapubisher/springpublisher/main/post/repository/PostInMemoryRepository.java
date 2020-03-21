@@ -4,9 +4,7 @@ import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.repo
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.repository.PostRepository;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class PostInMemoryRepository implements PostRepository {
     private final PostH2Repository postH2Repository;
@@ -17,7 +15,7 @@ public class PostInMemoryRepository implements PostRepository {
 
     @Override
     public Optional<Post> getNextToPublish() {
-        return postH2Repository.findFirstByOrderByLastDatePublishedAsc()
+        return postH2Repository.findFirstByOrderByPublishedDateAsc()
                 .map(this::convert);
     }
 
@@ -30,7 +28,7 @@ public class PostInMemoryRepository implements PostRepository {
         return PostEntity.builder()
                 .id(post.getId())
                 .description(post.getDescription())
-                .lastDatePublished(post.getLastDatePublished())
+                .publishedDate(post.getPublishedDate())
                 .name(post.getName())
                 .tags(String.join(",", post.getTags()))
                 .url(post.getUrl())
@@ -41,7 +39,7 @@ public class PostInMemoryRepository implements PostRepository {
         return Post.builder()
                 .id(postEntity.getId())
                 .description(postEntity.getDescription())
-                .lastDatePublished(postEntity.getLastDatePublished())
+                .publishedDate(postEntity.getPublishedDate())
                 .name(postEntity.getName())
                 .tags(Arrays.asList(postEntity.getTags().split(",")))
                 .url(postEntity.getUrl()).build();

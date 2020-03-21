@@ -2,7 +2,7 @@ package com.coderstower.socialmediapubisher.springpublisher.main.socialmedia;
 
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.repository.Post;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.Acknowledge;
-import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.PublishedPost;
+import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.Publication;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.SocialMediaPublisher;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.repository.credential.Oauth1Credentials;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.repository.credential.Oauth1CredentialsRepository;
@@ -12,7 +12,10 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.auth.AccessToken;
+import twitter4j.auth.NullAuthorization;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,10 +24,12 @@ public class TwitterPublisher implements SocialMediaPublisher {
     private static final String TWITTER = "twitter";
     private final Oauth1CredentialsRepository oauth1CredentialsRepository;
     private final Twitter twitter;
+    private final Clock clock;
 
-    public TwitterPublisher(Oauth1CredentialsRepository oauth1CredentialsRepository, Twitter twitter) {
+    public TwitterPublisher(Oauth1CredentialsRepository oauth1CredentialsRepository, Twitter twitter, Clock clock) {
         this.oauth1CredentialsRepository = oauth1CredentialsRepository;
         this.twitter = twitter;
+        this.clock = clock;
     }
 
     @Override
@@ -37,25 +42,25 @@ public class TwitterPublisher implements SocialMediaPublisher {
         Oauth1Credentials credentials = oauth1CredentialsRepository.getCredentials(TWITTER)
                 .orElseThrow(() -> new IllegalArgumentException("The credentials for " + TWITTER + " doesn't exist"));
 
-        AccessToken accessToken = new AccessToken(credentials.getAccessToken(), credentials.getTokenSecret());
-        twitter.setOAuthConsumer(credentials.getConsumerKey(), credentials.getConsumerSecret());
-        twitter.setOAuthAccessToken(accessToken);
-
         try {
+            if (areNotCredentialsReady(twitter)) {
+                setCredentials(twitter, credentials);
+            }
+
             Paging paging = new Paging(1, 1);
             List<Status> statuses = twitter.getHomeTimeline(paging);
 
-            if(Objects.nonNull(statuses)){
+            if (Objects.nonNull(statuses)) {
                 return Acknowledge.builder()
                         .status(Acknowledge.Status.SUCCESS)
                         .build();
-            }else{
+            } else {
                 return Acknowledge.builder()
                         .status(Acknowledge.Status.FAILURE)
                         .build();
             }
         } catch (TwitterException e) {
-            log.error("Error publishing to " + TWITTER, e);
+            log.error("Error ping to " + TWITTER, e);
 
             return Acknowledge.builder()
                     .status(Acknowledge.Status.FAILURE)
@@ -65,11 +70,48 @@ public class TwitterPublisher implements SocialMediaPublisher {
     }
 
     @Override
-    public PublishedPost publish(Post post) {
-        return PublishedPost.builder()
-                .post(post)
-                .status(PublishedPost.Status.SUCCESS)
-                .publisher(TWITTER)
-                .build();
+    public Publication publish(Post post) {
+        Oauth1Credentials credentials = oauth1CredentialsRepository.getCredentials(TWITTER)
+                .orElseThrow(() -> new IllegalArgumentException("The credentials for " + TWITTER + " doesn't exist"));
+
+        try {
+            if (areNotCredentialsReady(twitter)) {
+                setCredentials(twitter, credentials);
+            }
+
+            Status statuses = twitter.updateStatus(post.basicFormat());
+
+            if (Objects.nonNull(statuses)) {
+                return Publication.builder()
+                        .status(Publication.Status.SUCCESS)
+                        .publisher(TWITTER)
+                        .publishedDate(LocalDateTime.now(clock))
+                        .build();
+            } else {
+                return Publication.builder()
+                        .status(Publication.Status.FAILURE)
+                        .publisher(TWITTER)
+                        .publishedDate(LocalDateTime.now(clock))
+                        .build();
+            }
+        } catch (TwitterException e) {
+            log.error("Error publishing to " + TWITTER, e);
+
+            return Publication.builder()
+                    .status(Publication.Status.FAILURE)
+                    .publisher(TWITTER)
+                    .publishedDate(LocalDateTime.now(clock))
+                    .build();
+        }
+    }
+
+    private void setCredentials(Twitter twitter, Oauth1Credentials credentials) {
+        AccessToken accessToken = new AccessToken(credentials.getAccessToken(), credentials.getTokenSecret());
+        twitter.setOAuthConsumer(credentials.getConsumerKey(), credentials.getConsumerSecret());
+        twitter.setOAuthAccessToken(accessToken);
+    }
+
+    private boolean areNotCredentialsReady(Twitter twitter) throws TwitterException {
+        return twitter.getAuthorization() == NullAuthorization.getInstance();
     }
 }

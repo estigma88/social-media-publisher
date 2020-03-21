@@ -5,5 +5,5 @@ import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.repo
 public interface SocialMediaPublisher {
     String getName();
     Acknowledge ping();
-    PublishedPost publish(Post post);
+    Publication publish(Post post);
 }

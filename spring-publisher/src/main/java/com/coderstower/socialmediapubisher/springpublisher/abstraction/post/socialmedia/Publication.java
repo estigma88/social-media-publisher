@@ -4,14 +4,16 @@ import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.repo
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
-public class PublishedPost {
-    private final Post post;
+public class Publication {
     private final Status status;
     private final String publisher;
+    private final LocalDateTime publishedDate;
 
     public enum Status{
-        SUCCESS
+        SUCCESS, FAILURE
     }
 }

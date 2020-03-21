@@ -1,19 +1,54 @@
 package com.coderstower.socialmediapubisher.springpublisher.abstraction.post.repository;
 
+import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.Publication;
 import lombok.Builder;
 import lombok.Data;
 
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
 public class Post {
+    private static final String BASIC_FORMAT = "%s\n\n%s\n\n%s";
     private final String id;
     private final String name;
     private final String description;
     private final List<String> tags;
     private final URL url;
-    private final LocalDateTime lastDatePublished;
+    private final LocalDateTime publishedDate;
+    private final List<Publication> publications;
+
+    public String basicFormat(){
+        return String.format(BASIC_FORMAT,
+                description,
+                tags.stream()
+                        .map(tag -> "#" + tag)
+                        .collect(Collectors.joining(" "))
+                , url);
+    }
+
+    public Post updateLastDatePublished(LocalDateTime publishedDate){
+        return Post.builder()
+                .id(id)
+                .name(name)
+                .description(description)
+                .tags(tags)
+                .url(url)
+                .publications(publications)
+                .publishedDate(publishedDate).build();
+    }
+
+    public Post updatePublications(List<Publication> publications){
+        return Post.builder()
+                .id(id)
+                .name(name)
+                .description(description)
+                .tags(tags)
+                .url(url)
+                .publications(publications)
+                .publishedDate(publishedDate).build();
+    }
 }
