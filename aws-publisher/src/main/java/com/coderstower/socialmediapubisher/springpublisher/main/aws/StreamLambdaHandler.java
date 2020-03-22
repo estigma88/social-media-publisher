@@ -1,4 +1,4 @@
-package my.service;
+package com.coderstower.socialmediapubisher.springpublisher.main.aws;
 
 
 import com.amazonaws.serverless.exceptions.ContainerInitializationException;
@@ -17,7 +17,7 @@ public class StreamLambdaHandler implements RequestStreamHandler {
     private static SpringBootLambdaContainerHandler<AwsProxyRequest, AwsProxyResponse> handler;
     static {
         try {
-            handler = SpringBootLambdaContainerHandler.getAwsProxyHandler(Application.class);
+            handler = SpringBootLambdaContainerHandler.getAwsProxyHandler(AWSSpringPublisherApplication.class);
         } catch (ContainerInitializationException e) {
             // if we fail here. We re-throw the exception to force another cold start
             e.printStackTrace();

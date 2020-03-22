@@ -1,9 +1,10 @@
-package my.service;
+package com.coderstower.socialmediapubisher.springpublisher.main.aws;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.coderstower.socialmediapubisher.springpublisher.main.controller.PostsController;
+import com.coderstower.socialmediapubisher.springpublisher.main.factory.SpringPublisherFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.HandlerAdapter;
@@ -16,14 +17,15 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import my.service.controller.PingController;
 
-
-@SpringBootApplication
+@SpringBootApplication(excludeName =
+        {"org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration",
+                "org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration",
+                "org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration"})
 // We use direct @Import instead of @ComponentScan to speed up cold starts
 // @ComponentScan(basePackages = "my.service.controller")
-@Import({ PingController.class })
-public class Application extends SpringBootServletInitializer {
+@Import({PostsController.class, SpringPublisherFactory.class, SpringPublisherDynamoDBRepositoryFactory.class})
+public class AWSSpringPublisherApplication extends SpringBootServletInitializer {
 
     /*
      * Create required HandlerMapping, to avoid several default HandlerMapping instances being created
@@ -62,6 +64,6 @@ public class Application extends SpringBootServletInitializer {
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(AWSSpringPublisherApplication.class, args);
     }
 }

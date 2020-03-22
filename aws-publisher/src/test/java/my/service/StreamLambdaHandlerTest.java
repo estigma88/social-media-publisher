@@ -7,6 +7,7 @@ import com.amazonaws.serverless.proxy.internal.testutils.MockLambdaContext;
 import com.amazonaws.serverless.proxy.model.AwsProxyResponse;
 import com.amazonaws.services.lambda.runtime.Context;
 
+import com.coderstower.socialmediapubisher.springpublisher.main.aws.StreamLambdaHandler;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
