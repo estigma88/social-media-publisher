@@ -1,4 +1,4 @@
-package my.service;
+package com.coderstower.socialmediapubisher.springpublisher.main.aws;
 
 
 import com.amazonaws.serverless.proxy.internal.LambdaContainerHandler;
