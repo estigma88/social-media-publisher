@@ -33,7 +33,7 @@ public class PostAWSRepository implements PostRepository {
                 .description(post.getDescription())
                 .publishedDate(post.getPublishedDate())
                 .name(post.getName())
-                .tags(String.join(",", post.getTags()))
+                .tags(post.getTags())
                 .url(post.getUrl())
                 .build();
     }
@@ -44,7 +44,7 @@ public class PostAWSRepository implements PostRepository {
                 .description(postDynamo.getDescription())
                 .publishedDate(postDynamo.getPublishedDate())
                 .name(postDynamo.getName())
-                .tags(Arrays.asList(postDynamo.getTags().split(",")))
+                .tags(postDynamo.getTags())
                 .url(postDynamo.getUrl()).build();
     }
 }

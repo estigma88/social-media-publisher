@@ -6,6 +6,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted;
 import com.coderstower.socialmediapubisher.springpublisher.main.aws.repository.LocalDateTimeConverter;
+import com.coderstower.socialmediapubisher.springpublisher.main.aws.repository.URLConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
 
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @DynamoDBTable(tableName = "Posts")
@@ -28,10 +30,13 @@ public class PostDynamo {
     @DynamoDBAttribute
     private String description;
     @DynamoDBAttribute
-    private String tags;
+    private List<String> tags;
     @DynamoDBAttribute
+    @DynamoDBTypeConverted(converter = URLConverter.class)
     private URL url;
     @DynamoDBAttribute
     @DynamoDBTypeConverted(converter = LocalDateTimeConverter.class)
     private LocalDateTime publishedDate;
+    @DynamoDBAttribute
+    private Boolean active;
 }

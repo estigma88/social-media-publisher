@@ -29,19 +29,19 @@ public class AWSSpringPublisherApplication extends SpringBootServletInitializer 
 
     /*
      * Create required HandlerMapping, to avoid several default HandlerMapping instances being created
-     */
+
     @Bean
     public HandlerMapping handlerMapping() {
         return new RequestMappingHandlerMapping();
-    }
+    }*/
 
     /*
      * Create required HandlerAdapter, to avoid several default HandlerAdapter instances being created
-     */
+
     @Bean
     public HandlerAdapter handlerAdapter() {
         return new RequestMappingHandlerAdapter();
-    }
+    }*/
 
     /*
      * optimization - avoids creating default exception resolvers; not required as the serverless container handles
