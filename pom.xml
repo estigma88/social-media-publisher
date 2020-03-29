@@ -5,14 +5,14 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.22.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <version>2.2.1.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository 1.5.22.RELEASE-->
     </parent>
 
     <groupId>com.coderstower</groupId>
     <artifactId>social-media-publisher</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spring-publisher</name>
+    <name>social-media-publisher</name>
     <description>Demo project for Spring Boot</description>
     <packaging>pom</packaging>
 
@@ -20,4 +20,13 @@
         <module>spring-publisher</module>
         <module>aws-publisher</module>
     </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.12</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 </project>
