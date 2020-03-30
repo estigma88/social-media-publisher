@@ -1,4 +1,4 @@
-package com.coderstower.socialmediapubisher.springpublisher.main.socialmedia;
+package com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.twitter;
 
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.repository.Post;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.Acknowledge;
@@ -83,6 +83,7 @@ public class TwitterPublisher implements SocialMediaPublisher {
 
             if (Objects.nonNull(statuses)) {
                 return Publication.builder()
+                        .id(String.valueOf(statuses.getId()))
                         .status(Publication.Status.SUCCESS)
                         .publisher(TWITTER)
                         .publishedDate(LocalDateTime.now(clock))

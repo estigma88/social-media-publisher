@@ -7,6 +7,7 @@ import lombok.Data;
 @Builder
 public class Acknowledge {
     private final Status status;
+    private final String description;
     private final Exception exception;
 
     public enum Status{

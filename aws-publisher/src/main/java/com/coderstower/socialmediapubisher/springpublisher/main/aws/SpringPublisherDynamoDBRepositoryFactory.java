@@ -5,6 +5,8 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.coderstower.socialmediapubisher.springpublisher.main.aws.repository.oauth1.Oauth1CredentialAWSRepository;
 import com.coderstower.socialmediapubisher.springpublisher.main.aws.repository.oauth1.Oauth1CredentialDynamoRepository;
+import com.coderstower.socialmediapubisher.springpublisher.main.aws.repository.oauth2.Oauth2CredentialAWSRepository;
+import com.coderstower.socialmediapubisher.springpublisher.main.aws.repository.oauth2.Oauth2CredentialDynamoRepository;
 import com.coderstower.socialmediapubisher.springpublisher.main.aws.repository.post.PostAWSRepository;
 import com.coderstower.socialmediapubisher.springpublisher.main.aws.repository.post.PostDynamoRepository;
 import org.socialsignin.spring.data.dynamodb.repository.config.EnableDynamoDBRepositories;
@@ -35,6 +37,13 @@ public class SpringPublisherDynamoDBRepositoryFactory {
           Oauth1CredentialDynamoRepository oauth1CredentialDynamoRepository) {
     return new Oauth1CredentialAWSRepository(
             oauth1CredentialDynamoRepository);
+  }
+
+  @Bean
+  public Oauth2CredentialAWSRepository oauth2CredentialAWSRepository(
+          Oauth2CredentialDynamoRepository oauth2CredentialDynamoRepository) {
+    return new Oauth2CredentialAWSRepository(
+            oauth2CredentialDynamoRepository);
   }
 
   @Bean
