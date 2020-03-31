@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class Publication {
+    private final String id;
     private final Status status;
     private final String publisher;
     private final LocalDateTime publishedDate;

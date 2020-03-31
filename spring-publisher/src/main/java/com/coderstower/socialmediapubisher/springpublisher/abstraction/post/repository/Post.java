@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 @Builder
 public class Post {
     private static final String BASIC_FORMAT = "%s\n\n%s\n\n%s";
+    private static final String BASIC_FORMAT_WITHOUT_URL = "%s\n\n%s";
     private final String id;
     private final String name;
     private final String description;
@@ -21,7 +22,7 @@ public class Post {
     private final LocalDateTime publishedDate;
     private final List<Publication> publications;
 
-    public String basicFormat(){
+    public String basicFormat() {
         return String.format(BASIC_FORMAT,
                 description,
                 tags.stream()
@@ -30,7 +31,15 @@ public class Post {
                 , url);
     }
 
-    public Post updateLastDatePublished(LocalDateTime publishedDate){
+    public String basicFormatWithoutURL() {
+        return String.format(BASIC_FORMAT_WITHOUT_URL,
+                description,
+                tags.stream()
+                        .map(tag -> "#" + tag)
+                        .collect(Collectors.joining(" ")));
+    }
+
+    public Post updateLastDatePublished(LocalDateTime publishedDate) {
         return Post.builder()
                 .id(id)
                 .name(name)
@@ -41,7 +50,7 @@ public class Post {
                 .publishedDate(publishedDate).build();
     }
 
-    public Post updatePublications(List<Publication> publications){
+    public Post updatePublications(List<Publication> publications) {
         return Post.builder()
                 .id(id)
                 .name(name)
