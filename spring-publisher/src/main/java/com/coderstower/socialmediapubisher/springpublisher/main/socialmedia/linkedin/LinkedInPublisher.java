@@ -82,15 +82,11 @@ public class LinkedInPublisher implements SocialMediaPublisher {
                                             .originalUrl(post.getUrl().toString())
                                             .build())
                                     .build())
-
                             .build())
                     .visibility(Visibility.builder()
                             .memberNetworkVisibility("PUBLIC")
                             .build())
                     .build();
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            String a = objectMapper.writeValueAsString(linkedInShare);
 
             String shareId = publish(linkedInShare, credentials);
 
