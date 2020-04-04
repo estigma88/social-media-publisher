@@ -21,12 +21,13 @@ import java.util.Objects;
 
 @Slf4j
 public class TwitterPublisher implements SocialMediaPublisher {
-    private static final String TWITTER = "twitter";
+    private final String name;
     private final Oauth1CredentialsRepository oauth1CredentialsRepository;
     private final Twitter twitter;
     private final Clock clock;
 
-    public TwitterPublisher(Oauth1CredentialsRepository oauth1CredentialsRepository, Twitter twitter, Clock clock) {
+    public TwitterPublisher(String name, Oauth1CredentialsRepository oauth1CredentialsRepository, Twitter twitter, Clock clock) {
+        this.name = name;
         this.oauth1CredentialsRepository = oauth1CredentialsRepository;
         this.twitter = twitter;
         this.clock = clock;
@@ -34,13 +35,13 @@ public class TwitterPublisher implements SocialMediaPublisher {
 
     @Override
     public String getName() {
-        return TWITTER;
+        return name;
     }
 
     @Override
     public Acknowledge ping() {
-        Oauth1Credentials credentials = oauth1CredentialsRepository.getCredentials(TWITTER)
-                .orElseThrow(() -> new IllegalArgumentException("The credentials for " + TWITTER + " doesn't exist"));
+        Oauth1Credentials credentials = oauth1CredentialsRepository.getCredentials(name)
+                .orElseThrow(() -> new IllegalArgumentException("The credentials for " + name + " doesn't exist"));
 
         try {
             if (areNotCredentialsReady(twitter)) {
@@ -60,9 +61,10 @@ public class TwitterPublisher implements SocialMediaPublisher {
                         .build();
             }
         } catch (TwitterException e) {
-            log.error("Error ping to " + TWITTER, e);
+            log.error("Error ping to " + name, e);
 
             return Acknowledge.builder()
+                    .description("Ping error")
                     .status(Acknowledge.Status.FAILURE)
                     .exception(e)
                     .build();
@@ -71,8 +73,8 @@ public class TwitterPublisher implements SocialMediaPublisher {
 
     @Override
     public Publication publish(Post post) {
-        Oauth1Credentials credentials = oauth1CredentialsRepository.getCredentials(TWITTER)
-                .orElseThrow(() -> new IllegalArgumentException("The credentials for " + TWITTER + " doesn't exist"));
+        Oauth1Credentials credentials = oauth1CredentialsRepository.getCredentials(name)
+                .orElseThrow(() -> new IllegalArgumentException("The credentials for " + name + " doesn't exist"));
 
         try {
             if (areNotCredentialsReady(twitter)) {
@@ -85,22 +87,22 @@ public class TwitterPublisher implements SocialMediaPublisher {
                 return Publication.builder()
                         .id(String.valueOf(statuses.getId()))
                         .status(Publication.Status.SUCCESS)
-                        .publisher(TWITTER)
+                        .publisher(name)
                         .publishedDate(LocalDateTime.now(clock))
                         .build();
             } else {
                 return Publication.builder()
                         .status(Publication.Status.FAILURE)
-                        .publisher(TWITTER)
+                        .publisher(name)
                         .publishedDate(LocalDateTime.now(clock))
                         .build();
             }
         } catch (TwitterException e) {
-            log.error("Error publishing to " + TWITTER, e);
+            log.error("Error publishing to " + name, e);
 
             return Publication.builder()
                     .status(Publication.Status.FAILURE)
-                    .publisher(TWITTER)
+                    .publisher(name)
                     .publishedDate(LocalDateTime.now(clock))
                     .build();
         }
