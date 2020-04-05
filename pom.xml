@@ -16,6 +16,10 @@
     <description>Demo project for Spring Boot</description>
     <packaging>pom</packaging>
 
+    <properties>
+        <java.version>11</java.version>
+    </properties>
+
     <modules>
         <module>spring-publisher</module>
         <module>aws-publisher</module>
