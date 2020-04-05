@@ -37,8 +37,7 @@ public class PostPublisher {
                     .updatePublications(publishedPosts);
         } else {
             throw new IllegalStateException("Error publishing the post: " + nextPost
-                    .updatePublications(publishedPosts)
-                    .toString());
+                    .updatePublications(publishedPosts));
         }
     }
 

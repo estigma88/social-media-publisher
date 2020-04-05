@@ -19,16 +19,11 @@ import org.springframework.context.annotation.Configuration;
         (basePackages = "com.coderstower.socialmediapubisher.springpublisher.main.aws.repository")
 public class SpringPublisherDynamoDBRepositoryFactory {
   @Bean
-  public AmazonDynamoDB amazonDynamoDB(
-          @Value("${amazon.dynamodb.endpoint}") String amazonDynamoDBEndpoint) {
+  public AmazonDynamoDB amazonDynamoDB() {
     AmazonDynamoDB amazonDynamoDB
             = AmazonDynamoDBClientBuilder.standard()
             .withRegion(Regions.US_EAST_1)
             .build();
-    /*if (!StringUtils.isEmpty(amazonDynamoDBEndpoint)) {
-      amazonDynamoDB
-              .setEndpoint(amazonDynamoDBEndpoint);
-    }*/
     return amazonDynamoDB;
   }
 

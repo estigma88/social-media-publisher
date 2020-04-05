@@ -37,6 +37,4 @@ public class PostDynamo {
     @DynamoDBAttribute
     @DynamoDBTypeConverted(converter = LocalDateTimeConverter.class)
     private LocalDateTime publishedDate;
-    @DynamoDBAttribute
-    private Boolean active;
 }

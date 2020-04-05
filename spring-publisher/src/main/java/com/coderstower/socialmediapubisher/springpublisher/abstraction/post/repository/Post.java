@@ -7,6 +7,7 @@ import lombok.Data;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Data
@@ -25,7 +26,9 @@ public class Post {
     public String basicFormat() {
         return String.format(BASIC_FORMAT,
                 description,
-                tags.stream()
+                Optional.ofNullable(tags)
+                        .orElse(List.of())
+                        .stream()
                         .map(tag -> "#" + tag)
                         .collect(Collectors.joining(" "))
                 , url);
@@ -34,7 +37,9 @@ public class Post {
     public String basicFormatWithoutURL() {
         return String.format(BASIC_FORMAT_WITHOUT_URL,
                 description,
-                tags.stream()
+                Optional.ofNullable(tags)
+                        .orElse(List.of())
+                        .stream()
                         .map(tag -> "#" + tag)
                         .collect(Collectors.joining(" ")));
     }

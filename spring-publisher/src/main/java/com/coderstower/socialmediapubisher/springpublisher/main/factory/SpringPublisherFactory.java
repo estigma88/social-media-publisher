@@ -31,12 +31,12 @@ public class SpringPublisherFactory {
 
     @Bean
     public TwitterPublisher twitterPublisher(Oauth1CredentialsRepository oauth1CredentialsRepository, Twitter twitter, Clock clock) {
-        return new TwitterPublisher(oauth1CredentialsRepository, twitter, clock);
+        return new TwitterPublisher("twitter", oauth1CredentialsRepository, twitter, clock);
     }
 
     @Bean
     public LinkedInPublisher linkedInPublisher(Oauth2CredentialsRepository oauth2CredentialsRepository, RestTemplate restTemplate, Clock clock){
-        return new LinkedInPublisher(oauth2CredentialsRepository, restTemplate, clock);
+        return new LinkedInPublisher("linkedin", oauth2CredentialsRepository, restTemplate, clock);
     }
 
     @Bean

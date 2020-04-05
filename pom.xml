@@ -16,6 +16,10 @@
     <description>Demo project for Spring Boot</description>
     <packaging>pom</packaging>
 
+    <properties>
+        <java.version>11</java.version>
+    </properties>
+
     <modules>
         <module>spring-publisher</module>
         <module>aws-publisher</module>
@@ -27,6 +31,17 @@
             <artifactId>lombok</artifactId>
             <version>1.18.12</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 </project>

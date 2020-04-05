@@ -6,7 +6,6 @@ import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.soci
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.SocialMediaPublisher;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.repository.credential.Oauth2Credentials;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.repository.credential.Oauth2CredentialsRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -21,12 +20,13 @@ import java.util.Objects;
 
 @Slf4j
 public class LinkedInPublisher implements SocialMediaPublisher {
-    private static final String LINKEDIN = "linkedin";
+    private final String name;
     private final Oauth2CredentialsRepository oauth2CredentialsRepository;
     private final RestTemplate restTemplate;
     private final Clock clock;
 
-    public LinkedInPublisher(Oauth2CredentialsRepository oauth2CredentialsRepository, RestTemplate restTemplate, Clock clock) {
+    public LinkedInPublisher(String name, Oauth2CredentialsRepository oauth2CredentialsRepository, RestTemplate restTemplate, Clock clock) {
+        this.name = name;
         this.oauth2CredentialsRepository = oauth2CredentialsRepository;
         this.restTemplate = restTemplate;
         this.clock = clock;
@@ -34,13 +34,13 @@ public class LinkedInPublisher implements SocialMediaPublisher {
 
     @Override
     public String getName() {
-        return LINKEDIN;
+        return name;
     }
 
     @Override
     public Acknowledge ping() {
-        Oauth2Credentials credentials = oauth2CredentialsRepository.getCredentials(LINKEDIN)
-                .orElseThrow(() -> new IllegalArgumentException("The credentials for " + LINKEDIN + " doesn't exist"));
+        Oauth2Credentials credentials = oauth2CredentialsRepository.getCredentials(name)
+                .orElseThrow(() -> new IllegalArgumentException("The credentials for " + name + " doesn't exist"));
 
         if (areCredentialsExpired(credentials)) {
             return Acknowledge.builder()
@@ -56,8 +56,8 @@ public class LinkedInPublisher implements SocialMediaPublisher {
 
     @Override
     public Publication publish(Post post) {
-        Oauth2Credentials credentials = oauth2CredentialsRepository.getCredentials(LINKEDIN)
-                .orElseThrow(() -> new IllegalArgumentException("The credentials for " + LINKEDIN + " doesn't exist"));
+        Oauth2Credentials credentials = oauth2CredentialsRepository.getCredentials(name)
+                .orElseThrow(() -> new IllegalArgumentException("The credentials for " + name + " doesn't exist"));
 
         try {
             Profile profile = getProfile(credentials);
@@ -82,15 +82,11 @@ public class LinkedInPublisher implements SocialMediaPublisher {
                                             .originalUrl(post.getUrl().toString())
                                             .build())
                                     .build())
-
                             .build())
                     .visibility(Visibility.builder()
                             .memberNetworkVisibility("PUBLIC")
                             .build())
                     .build();
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            String a = objectMapper.writeValueAsString(linkedInShare);
 
             String shareId = publish(linkedInShare, credentials);
 
@@ -98,22 +94,22 @@ public class LinkedInPublisher implements SocialMediaPublisher {
                 return Publication.builder()
                         .id(shareId)
                         .status(Publication.Status.SUCCESS)
-                        .publisher(LINKEDIN)
+                        .publisher(name)
                         .publishedDate(LocalDateTime.now(clock))
                         .build();
             } else {
                 return Publication.builder()
                         .status(Publication.Status.FAILURE)
-                        .publisher(LINKEDIN)
+                        .publisher(name)
                         .publishedDate(LocalDateTime.now(clock))
                         .build();
             }
         } catch (Exception e) {
-            log.error("Error publishing to " + LINKEDIN, e);
+            log.error("Error publishing to " + name, e);
 
             return Publication.builder()
                     .status(Publication.Status.FAILURE)
-                    .publisher(LINKEDIN)
+                    .publisher(name)
                     .publishedDate(LocalDateTime.now(clock))
                     .build();
         }
