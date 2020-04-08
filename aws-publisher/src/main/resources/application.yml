@@ -4,10 +4,30 @@
 #  level:
 #    root: WARN
 
-amazon:
-  dynamodb:
-    endpoint: http://localhost:8000/
+social-media-publisher:
+  principal-names-allowed:
+    linkedin: xxx
 
 spring:
   main:
     allow-bean-definition-overriding: true
+  security:
+    oauth2:
+      client:
+        registration:
+          linkedin:
+            client-id: xxx
+            client-secret: xxx
+            client-authentication-method: post
+            authorization-grant-type: authorization_code
+            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
+            scope:
+              - r_liteprofile
+              - r_emailaddress
+              - w_member_social
+        provider:
+          linkedin:
+            authorization-uri: https://www.linkedin.com/oauth/v2/authorization
+            token-uri: https://www.linkedin.com/oauth/v2/accessToken
+            user-info-uri: https://api.linkedin.com/v2/me
+            user-name-attribute: id

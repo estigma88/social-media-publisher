@@ -4,5 +4,5 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface Oauth2CredentialDynamoRepository extends CrudRepository<Oauth2CredentialDynamo, String> {
+public interface OAuth2CredentialDynamoRepository extends CrudRepository<OAuth2CredentialDynamo, String> {
 }

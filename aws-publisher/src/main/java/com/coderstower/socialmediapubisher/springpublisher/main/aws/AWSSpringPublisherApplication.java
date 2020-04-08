@@ -1,7 +1,9 @@
 package com.coderstower.socialmediapubisher.springpublisher.main.aws;
 
+import com.coderstower.socialmediapubisher.springpublisher.main.controller.OAuth2CredentialsController;
 import com.coderstower.socialmediapubisher.springpublisher.main.controller.PostsController;
 import com.coderstower.socialmediapubisher.springpublisher.main.factory.SpringPublisherFactory;
+import com.coderstower.socialmediapubisher.springpublisher.main.security.SecurityConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
@@ -17,7 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 @SpringBootApplication
 // We use direct @Import instead of @ComponentScan to speed up cold starts
 // @ComponentScan(basePackages = "my.service.controller")
-@Import({PostsController.class, SpringPublisherFactory.class, SpringPublisherDynamoDBRepositoryFactory.class})
+@Import({PostsController.class, OAuth2CredentialsController.class, SecurityConfig.class,
+        SpringPublisherFactory.class, SpringPublisherDynamoDBRepositoryFactory.class})
 public class AWSSpringPublisherApplication extends SpringBootServletInitializer {
 
     /*

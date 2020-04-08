@@ -3,10 +3,13 @@ package com.coderstower.socialmediapubisher.springpublisher.main.factory;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.PostPublisher;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.repository.PostRepository;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.SocialMediaPublisher;
-import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.repository.credential.Oauth1CredentialsRepository;
-import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.repository.credential.Oauth2CredentialsRepository;
+import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.OAuth2CredentialsManager;
+import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.repository.OAuth1CredentialsRepository;
+import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.repository.OAuth2CredentialsRepository;
 import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.linkedin.LinkedInPublisher;
 import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.twitter.TwitterPublisher;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -15,9 +18,11 @@ import twitter4j.TwitterFactory;
 
 import java.time.Clock;
 import java.util.List;
+import java.util.Map;
 
 
 @Configuration
+@EnableConfigurationProperties({SocialMediaPublisherProperties.class})
 public class SpringPublisherFactory {
     @Bean
     public Clock clock(){
@@ -30,13 +35,18 @@ public class SpringPublisherFactory {
     }
 
     @Bean
-    public TwitterPublisher twitterPublisher(Oauth1CredentialsRepository oauth1CredentialsRepository, Twitter twitter, Clock clock) {
+    public TwitterPublisher twitterPublisher(OAuth1CredentialsRepository oauth1CredentialsRepository, Twitter twitter, Clock clock) {
         return new TwitterPublisher("twitter", oauth1CredentialsRepository, twitter, clock);
     }
 
     @Bean
-    public LinkedInPublisher linkedInPublisher(Oauth2CredentialsRepository oauth2CredentialsRepository, RestTemplate restTemplate, Clock clock){
+    public LinkedInPublisher linkedInPublisher(OAuth2CredentialsRepository oauth2CredentialsRepository, RestTemplate restTemplate, Clock clock){
         return new LinkedInPublisher("linkedin", oauth2CredentialsRepository, restTemplate, clock);
+    }
+
+    @Bean
+    public OAuth2CredentialsManager oAuth2CredentialsManager(OAuth2CredentialsRepository oAuth2CredentialsRepository, SocialMediaPublisherProperties socialMediaPublisherProperties){
+        return new OAuth2CredentialsManager(oAuth2CredentialsRepository, socialMediaPublisherProperties.getPrincipalNamesAllowed());
     }
 
     @Bean

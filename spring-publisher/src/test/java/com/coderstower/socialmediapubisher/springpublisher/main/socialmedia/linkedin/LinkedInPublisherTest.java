@@ -3,8 +3,8 @@ package com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.lin
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.repository.Post;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.Acknowledge;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.Publication;
-import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.repository.credential.Oauth2Credentials;
-import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.repository.credential.Oauth2CredentialsRepository;
+import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.repository.OAuth2Credentials;
+import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.repository.OAuth2CredentialsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +33,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class LinkedInPublisherTest {
     @Mock
-    private Oauth2CredentialsRepository oauth2CredentialsRepository;
+    private OAuth2CredentialsRepository oauth2CredentialsRepository;
     @Mock
     private RestTemplate restTemplate;
 
@@ -58,7 +58,7 @@ class LinkedInPublisherTest {
 
     @Test
     public void ping_expiredCredential_exception() {
-        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(Oauth2Credentials.builder()
+        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(OAuth2Credentials.builder()
                 .expirationDate(now.toLocalDateTime().minusMonths(1))
                 .build()));
 
@@ -72,7 +72,7 @@ class LinkedInPublisherTest {
 
     @Test
     public void ping_goodCredential_success() {
-        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(Oauth2Credentials.builder()
+        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(OAuth2Credentials.builder()
                 .expirationDate(now.toLocalDateTime().plusMonths(1))
                 .build()));
 
@@ -92,7 +92,7 @@ class LinkedInPublisherTest {
 
         HttpEntity<Void> requestEntityProfile = new HttpEntity<>(httpHeadersProfile);
 
-        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(Oauth2Credentials.builder()
+        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(OAuth2Credentials.builder()
                 .accessToken("accessToken")
                 .build()));
         when(restTemplate.exchange("https://api.linkedin.com/v2/me", HttpMethod.GET, requestEntityProfile, Profile.class))
@@ -114,7 +114,7 @@ class LinkedInPublisherTest {
         httpHeaders.add("X-Restli-Protocol-Version", "2.0.0");
         httpHeaders.setBearerAuth("accessToken");
 
-        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(Oauth2Credentials.builder()
+        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(OAuth2Credentials.builder()
                 .accessToken("accessToken")
                 .build()));
 
@@ -179,7 +179,7 @@ class LinkedInPublisherTest {
         httpHeaders.add("X-Restli-Protocol-Version", "2.0.0");
         httpHeaders.setBearerAuth("accessToken");
 
-        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(Oauth2Credentials.builder()
+        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(OAuth2Credentials.builder()
                 .accessToken("accessToken")
                 .build()));
 
@@ -244,7 +244,7 @@ class LinkedInPublisherTest {
         httpHeaders.add("X-Restli-Protocol-Version", "2.0.0");
         httpHeaders.setBearerAuth("accessToken");
 
-        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(Oauth2Credentials.builder()
+        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(OAuth2Credentials.builder()
                 .accessToken("accessToken")
                 .build()));
 

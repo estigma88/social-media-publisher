@@ -3,8 +3,8 @@ package com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.twi
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.repository.Post;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.Acknowledge;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.Publication;
-import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.repository.credential.Oauth1Credentials;
-import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.repository.credential.Oauth1CredentialsRepository;
+import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.repository.OAuth1Credentials;
+import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.repository.OAuth1CredentialsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,7 +35,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class TwitterPublisherTest {
     @Mock
-    private Oauth1CredentialsRepository oauth1CredentialsRepository;
+    private OAuth1CredentialsRepository oauth1CredentialsRepository;
     @Mock
     private Twitter twitter;
     private TwitterPublisher twitterPublisher;
@@ -59,7 +59,7 @@ class TwitterPublisherTest {
 
     @Test
     public void ping_credentialNoSetTwitterError_ackFailure() throws TwitterException {
-        when(oauth1CredentialsRepository.getCredentials("twitter")).thenReturn(Optional.of(Oauth1Credentials.builder()
+        when(oauth1CredentialsRepository.getCredentials("twitter")).thenReturn(Optional.of(OAuth1Credentials.builder()
                 .accessToken("accessToken")
                 .consumerKey("consumerKey")
                 .consumerSecret("consumerSecret")
@@ -81,7 +81,7 @@ class TwitterPublisherTest {
 
     @Test
     public void ping_credentialSetEmptyStatus_ackFailure() throws TwitterException {
-        when(oauth1CredentialsRepository.getCredentials("twitter")).thenReturn(Optional.of(Oauth1Credentials.builder()
+        when(oauth1CredentialsRepository.getCredentials("twitter")).thenReturn(Optional.of(OAuth1Credentials.builder()
                 .accessToken("accessToken")
                 .consumerKey("consumerKey")
                 .consumerSecret("consumerSecret")
@@ -101,7 +101,7 @@ class TwitterPublisherTest {
 
     @Test
     public void ping_credentialSetStatus_ackSucced() throws TwitterException {
-        when(oauth1CredentialsRepository.getCredentials("twitter")).thenReturn(Optional.of(Oauth1Credentials.builder()
+        when(oauth1CredentialsRepository.getCredentials("twitter")).thenReturn(Optional.of(OAuth1Credentials.builder()
                 .accessToken("accessToken")
                 .consumerKey("consumerKey")
                 .consumerSecret("consumerSecret")
@@ -130,7 +130,7 @@ class TwitterPublisherTest {
 
     @Test
     public void publish_credentialNoSetTwitterError_shareFailure() throws TwitterException, MalformedURLException {
-        when(oauth1CredentialsRepository.getCredentials("twitter")).thenReturn(Optional.of(Oauth1Credentials.builder()
+        when(oauth1CredentialsRepository.getCredentials("twitter")).thenReturn(Optional.of(OAuth1Credentials.builder()
                 .accessToken("accessToken")
                 .consumerKey("consumerKey")
                 .consumerSecret("consumerSecret")
@@ -159,7 +159,7 @@ class TwitterPublisherTest {
 
     @Test
     public void publish_credentialSetEmptyStatus_shareFailure() throws TwitterException, MalformedURLException {
-        when(oauth1CredentialsRepository.getCredentials("twitter")).thenReturn(Optional.of(Oauth1Credentials.builder()
+        when(oauth1CredentialsRepository.getCredentials("twitter")).thenReturn(Optional.of(OAuth1Credentials.builder()
                 .accessToken("accessToken")
                 .consumerKey("consumerKey")
                 .consumerSecret("consumerSecret")
@@ -188,7 +188,7 @@ class TwitterPublisherTest {
 
     @Test
     public void publish_credentialSetStatus_ackSucced() throws TwitterException, MalformedURLException {
-        when(oauth1CredentialsRepository.getCredentials("twitter")).thenReturn(Optional.of(Oauth1Credentials.builder()
+        when(oauth1CredentialsRepository.getCredentials("twitter")).thenReturn(Optional.of(OAuth1Credentials.builder()
                 .accessToken("accessToken")
                 .consumerKey("consumerKey")
                 .consumerSecret("consumerSecret")

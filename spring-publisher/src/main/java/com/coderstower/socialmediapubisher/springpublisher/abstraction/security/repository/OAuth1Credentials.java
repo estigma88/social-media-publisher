@@ -1,11 +1,11 @@
-package com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.repository.credential;
+package com.coderstower.socialmediapubisher.springpublisher.abstraction.security.repository;
 
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class Oauth1Credentials {
+public class OAuth1Credentials {
     private final String id;
     private final String consumerKey;
     private final String consumerSecret;
