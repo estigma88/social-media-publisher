@@ -13,4 +13,5 @@ import java.util.Map;
 @Builder
 public class SocialMediaPublisherProperties {
     private final Map<String, String> principalNamesAllowed;
+    private final CredentialsProperties credentials;
 }

@@ -7,6 +7,8 @@
 social-media-publisher:
   principal-names-allowed:
     linkedin: xxx
+  credentials:
+    login-url: 'http://localhost:8080/oauth2/%1s/credentials'
 
 spring:
   main:

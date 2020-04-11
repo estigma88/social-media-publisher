@@ -3,6 +3,7 @@ package com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.lin
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.repository.Post;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.Acknowledge;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.Publication;
+import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.UnauthorizedException;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.repository.OAuth2Credentials;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.repository.OAuth2CredentialsRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,7 +45,7 @@ class LinkedInPublisherTest {
     public void before() {
         this.now = ZonedDateTime.of(2020, 3, 3, 5, 6, 8, 1, ZoneId.of("UTC"));
         this.linkedInPublisher = new LinkedInPublisher("linkedin", oauth2CredentialsRepository, restTemplate, Clock
-                .fixed(now.toInstant(), ZoneId.of("UTC")));
+                .fixed(now.toInstant(), ZoneId.of("UTC")), "http://localhost:8080/oauth2/%1s/credentials");
     }
 
     @Test
@@ -62,12 +63,9 @@ class LinkedInPublisherTest {
                 .expirationDate(now.toLocalDateTime().minusMonths(1))
                 .build()));
 
-        Acknowledge ack = linkedInPublisher.ping();
+        UnauthorizedException exception = assertThrows(UnauthorizedException.class, () -> linkedInPublisher.ping());
 
-        assertThat(ack).isEqualTo(Acknowledge.builder()
-                .status(Acknowledge.Status.FAILURE)
-                .description("Credentials expired")
-                .build());
+        assertThat(exception.getMessage()).isEqualTo("Unauthorized. Please login again here: http://localhost:8080/oauth2/linkedin/credentials");
     }
 
     @Test

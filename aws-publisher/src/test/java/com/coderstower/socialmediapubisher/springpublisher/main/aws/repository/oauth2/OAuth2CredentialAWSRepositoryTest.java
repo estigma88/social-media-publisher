@@ -37,4 +37,29 @@ class OAuth2CredentialAWSRepositoryTest {
                 .build()));
     }
 
+    @Test
+    public void update(){
+        when(oauth2CredentialDynamoRepository.save(OAuth2CredentialDynamo.builder()
+                .id("linkedin")
+                .accessToken("accessToken")
+                .expirationDate(LocalDateTime.of(2020, 3, 3, 5, 6, 8, 1))
+                .build())).thenReturn(OAuth2CredentialDynamo.builder()
+                .id("linkedin")
+                .accessToken("accessToken")
+                .expirationDate(LocalDateTime.of(2020, 3, 3, 5, 6, 8, 1))
+                .build());
+
+        OAuth2Credentials credentials = oauth2CredentialAWSRepository.update(OAuth2Credentials.builder()
+                .id("linkedin")
+                .accessToken("accessToken")
+                .expirationDate(LocalDateTime.of(2020, 3, 3, 5, 6, 8, 1))
+                .build());
+
+        assertThat(credentials).isEqualTo(OAuth2Credentials.builder()
+                .id("linkedin")
+                .accessToken("accessToken")
+                .expirationDate(LocalDateTime.of(2020, 3, 3, 5, 6, 8, 1))
+                .build());
+    }
+
 }

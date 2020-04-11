@@ -2,9 +2,8 @@ package com.coderstower.socialmediapubisher.springpublisher.abstraction.security
 
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.repository.OAuth2Credentials;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.repository.OAuth2CredentialsRepository;
-import org.springframework.http.HttpStatus;
+import com.google.common.eventbus.EventBus;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -14,24 +13,32 @@ import java.util.Optional;
 public class OAuth2CredentialsManager {
     private final OAuth2CredentialsRepository oAuth2CredentialsRepository;
     private final Map<String, String> principalNamesAllowed;
+    private final EventBus eventBus;
 
-    public OAuth2CredentialsManager(OAuth2CredentialsRepository oAuth2CredentialsRepository, Map<String, String> principalNamesAllowed) {
+    public OAuth2CredentialsManager(OAuth2CredentialsRepository oAuth2CredentialsRepository, Map<String, String> principalNamesAllowed, EventBus eventBus) {
         this.oAuth2CredentialsRepository = oAuth2CredentialsRepository;
         this.principalNamesAllowed = principalNamesAllowed;
+        this.eventBus = eventBus;
     }
 
     public OAuth2Credentials update(OAuth2AuthorizedClient authorizedClient, String socialAccount) {
         if (isNotAllowed(authorizedClient, socialAccount)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            throw new UnauthorizedException();
         }
 
         OAuth2Credentials credentials = oAuth2CredentialsRepository.getCredentials(socialAccount)
-                .orElseThrow(() -> new IllegalArgumentException("Social account doesn't exist"));
+                .orElseThrow(() -> new IllegalArgumentException("Social account doesn't exist: " + socialAccount));
 
         OAuth2Credentials updatedCredentials = credentials.update(authorizedClient.getAccessToken().getTokenValue(),
                 LocalDateTime.ofInstant(authorizedClient.getAccessToken().getExpiresAt(), ZoneOffset.UTC));
 
-        return oAuth2CredentialsRepository.update(updatedCredentials);
+        OAuth2Credentials newCredentials = oAuth2CredentialsRepository.update(updatedCredentials);
+
+        eventBus.post(OAuth2CredentialsUpdated.builder()
+                .oAuth2Credentials(newCredentials)
+                .build());
+
+        return newCredentials;
     }
 
     private boolean isNotAllowed(OAuth2AuthorizedClient authorizedClient, String socialAccount) {
