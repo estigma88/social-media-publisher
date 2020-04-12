@@ -11,6 +11,8 @@ import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationC
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
 import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
@@ -22,6 +24,12 @@ public class SecurityConfig {
     @Order(1)
     @Configuration
     public static class LinkedinSecurity extends WebSecurityConfigurerAdapter {
+        private final ClientRegistrationRepository clientRegistrationRepository;
+
+        public LinkedinSecurity(ClientRegistrationRepository clientRegistrationRepository) {
+            this.clientRegistrationRepository = clientRegistrationRepository;
+        }
+
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http
@@ -29,6 +37,11 @@ public class SecurityConfig {
                     .antMatchers("/oauth2/linkedin/credentials").authenticated()
                     .and()
                     .oauth2Login()
+                    /*
+                    Create a new ClientRegistrationRepository with only Linkedin configuration to avoid
+                    using other OAuth2 configuration over this endpoint
+                     */
+                    .clientRegistrationRepository(new InMemoryClientRegistrationRepository(clientRegistrationRepository.findByRegistrationId("linkedin")))
                     .tokenEndpoint()
                     .accessTokenResponseClient(authorizationCodeTokenResponseClient());
         }
