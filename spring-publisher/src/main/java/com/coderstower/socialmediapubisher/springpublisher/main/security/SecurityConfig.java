@@ -2,6 +2,7 @@ package com.coderstower.socialmediapubisher.springpublisher.main.security;
 
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.OAuth2AccessTokenResponseConverterWithDefaults;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,6 +23,7 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfig {
     @Order(1)
+    @Profile("linkedin")
     @Configuration
     public static class LinkedinSecurity extends WebSecurityConfigurerAdapter {
         private final ClientRegistrationRepository clientRegistrationRepository;
