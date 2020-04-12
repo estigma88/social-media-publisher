@@ -25,7 +25,7 @@ public class OAuth2CredentialsController {
 
     /**
      * Endpoint secured to redirect to the right authorization provider.
-     * Needs to be a GET to allow access from the browwser and the whole 0Auth2 flow
+     * Needs to be a GET to allow access from the browser and the whole 0Auth2 flow
      */
     @RequestMapping(path = "/oauth2/{socialAccount}/credentials", method = RequestMethod.GET)
     public ResponseEntity<Void> updateOAuth2Credentials(@RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient, @PathVariable String socialAccount) {

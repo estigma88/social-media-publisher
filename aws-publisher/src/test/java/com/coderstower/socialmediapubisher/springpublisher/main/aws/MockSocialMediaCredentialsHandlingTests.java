@@ -14,7 +14,10 @@ import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.OAuth2CredentialsUpdated;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.repository.OAuth2Credentials;
 import com.google.common.eventbus.EventBus;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junitpioneer.jupiter.SetSystemProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -55,15 +58,16 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @SetSystemProperty(key = "sqlite4java.library.path", value = "target/native-libs")
 @TestPropertySource(properties = {"social-media-publisher.principal-names-allowed.linkedin=myuser"})
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class MockSocialMediaCredentialsHandlingTests {
     @Autowired
     private MockMvc mvc;
@@ -77,17 +81,29 @@ class MockSocialMediaCredentialsHandlingTests {
     private ClientRegistrationRepository registrations;
 
     @Test
+    @Order(1)
     void publish_credentialsExpired_unauthorizedException() throws Exception {
         mockingTwitter();
 
         mvc.perform(post("/posts/next")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().string("Unauthorized. Please login again here: http://localhost:8080/oauth2/linkedin/credentials"));
     }
 
     @Test
-    void login_success_updateCredentials() throws Exception {
+    @Order(2)
+    void login_noSuccessLinkedin_return302() throws Exception {
+        mvc.perform(get("/oauth2/linkedin/credentials")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isFound())
+                .andExpect(header().string("Location", "http://localhost/oauth2/authorization/linkedin"));
+    }
+
+    @Test
+    @Order(3)
+    void login_successLinkedin_updateCredentials() throws Exception {
         mockingTwitter();
 
         OAuth2AuthenticationToken authenticationToken = createToken();
