@@ -9,6 +9,7 @@ import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.link
 import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.twitter.TwitterPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.client.RestTemplate;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
@@ -30,11 +31,13 @@ public class SpringPublisherFactory {
     }
 
     @Bean
+    @Profile("twitter")
     public TwitterPublisher twitterPublisher(Oauth1CredentialsRepository oauth1CredentialsRepository, Twitter twitter, Clock clock) {
         return new TwitterPublisher("twitter", oauth1CredentialsRepository, twitter, clock);
     }
 
     @Bean
+    @Profile("linkedin")
     public LinkedInPublisher linkedInPublisher(Oauth2CredentialsRepository oauth2CredentialsRepository, RestTemplate restTemplate, Clock clock){
         return new LinkedInPublisher("linkedin", oauth2CredentialsRepository, restTemplate, clock);
     }

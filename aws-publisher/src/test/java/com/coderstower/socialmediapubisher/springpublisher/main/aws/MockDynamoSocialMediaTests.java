@@ -54,7 +54,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @SetSystemProperty(key = "sqlite4java.library.path", value = "target/native-libs")
-class MockSocialMediaTests {
+class MockDynamoSocialMediaTests {
     @Autowired
     private MockMvc mvc;
     @MockBean
