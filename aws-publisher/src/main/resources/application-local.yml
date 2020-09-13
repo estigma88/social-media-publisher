@@ -4,6 +4,12 @@
 #  level:
 #    root: WARN
 
+amazon:
+  dynamodb:
+    endpoint: http://localhost:8000/
+    accesskey: key
+    secretkey: key2
+
 spring:
   main:
     allow-bean-definition-overriding: true

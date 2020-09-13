@@ -21,7 +21,7 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+public class SecurityFactory {
     @Order(1)
     @Profile("linkedin")
     @Configuration
@@ -70,6 +70,7 @@ public class SecurityConfig {
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http
+                    .csrf().disable()
                     .authorizeRequests()
                     .antMatchers("/ping", "/posts/next").permitAll();
         }
