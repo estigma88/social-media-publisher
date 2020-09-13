@@ -8,6 +8,8 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.coderstower.socialmediapubisher.springpublisher.main.aws.repository.oauth1.OAuth1CredentialAWSRepository;
 import com.coderstower.socialmediapubisher.springpublisher.main.aws.repository.oauth1.OAuth1CredentialDynamoRepository;
+import com.coderstower.socialmediapubisher.springpublisher.main.aws.repository.oauth2.OAuth2AuthorizationRequestAWSRepository;
+import com.coderstower.socialmediapubisher.springpublisher.main.aws.repository.oauth2.OAuth2AuthorizationRequestDynamoRepository;
 import com.coderstower.socialmediapubisher.springpublisher.main.aws.repository.oauth2.OAuth2CredentialAWSRepository;
 import com.coderstower.socialmediapubisher.springpublisher.main.aws.repository.oauth2.OAuth2CredentialDynamoRepository;
 import com.coderstower.socialmediapubisher.springpublisher.main.aws.repository.post.PostAWSRepository;
@@ -17,6 +19,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
+import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 
 @Configuration
 @EnableDynamoDBRepositories
@@ -59,5 +64,11 @@ public class SpringPublisherDynamoDBRepositoryFactory {
   public PostAWSRepository postAWSRepository(
           PostDynamoRepository postDynamoRepository) {
     return new PostAWSRepository(postDynamoRepository);
+  }
+
+  @Bean
+  public AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepositoryDynamo(OAuth2AuthorizationRequestDynamoRepository oAuth2AuthorizationRequestDynamoRepository){
+    return new OAuth2AuthorizationRequestAWSRepository(oAuth2AuthorizationRequestDynamoRepository);
+//    return new HttpSessionOAuth2AuthorizationRequestRepository();
   }
 }

@@ -14,8 +14,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriTemplate;
 
-import java.net.URL;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -26,14 +26,14 @@ public class LinkedInPublisher implements SocialMediaPublisher {
     private final OAuth2CredentialsRepository oauth2CredentialsRepository;
     private final RestTemplate restTemplate;
     private final Clock clock;
-    private final String credentialsURL;
+    private final UriTemplate loginURL;
 
-    public LinkedInPublisher(String name, OAuth2CredentialsRepository oauth2CredentialsRepository, RestTemplate restTemplate, Clock clock, String credentialsURL) {
+    public LinkedInPublisher(String name, OAuth2CredentialsRepository oauth2CredentialsRepository, RestTemplate restTemplate, Clock clock, UriTemplate loginURL) {
         this.name = name;
         this.oauth2CredentialsRepository = oauth2CredentialsRepository;
         this.restTemplate = restTemplate;
         this.clock = clock;
-        this.credentialsURL = credentialsURL;
+        this.loginURL = loginURL;
     }
 
     @Override
@@ -47,7 +47,7 @@ public class LinkedInPublisher implements SocialMediaPublisher {
                 .orElseThrow(() -> new IllegalArgumentException("The credentials for " + name + " doesn't exist"));
 
         if (areCredentialsExpired(credentials)) {
-            throw new UnauthorizedException("Unauthorized. Please login again here: " + String.format(credentialsURL, name));
+            throw new UnauthorizedException("Unauthorized. Please login again here: " + loginURL.expand(name));
         } else {
             return Acknowledge.builder()
                     .status(Acknowledge.Status.SUCCESS)

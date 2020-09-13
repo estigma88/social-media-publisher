@@ -13,6 +13,11 @@ public class OAuth2CredentialAWSRepository implements OAuth2CredentialsRepositor
     }
 
     @Override
+    public OAuth2Credentials save(OAuth2Credentials oAuth2Credentials) {
+        return convert(oauth2CredentialDynamoRepository.save(convert(oAuth2Credentials)));
+    }
+
+    @Override
     public OAuth2Credentials update(OAuth2Credentials oAuth2Credentials) {
         return convert(oauth2CredentialDynamoRepository.save(convert(oAuth2Credentials)));
     }

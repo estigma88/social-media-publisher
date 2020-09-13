@@ -27,16 +27,22 @@ public class OAuth2CredentialsManager {
         }
 
         OAuth2Credentials credentials = oAuth2CredentialsRepository.getCredentials(socialAccount)
-                .orElseThrow(() -> new IllegalArgumentException("Social account doesn't exist: " + socialAccount));
+                .orElseGet(() -> oAuth2CredentialsRepository.save(OAuth2Credentials.builder()
+                        .id(socialAccount)
+                        .build()));
 
-        OAuth2Credentials updatedCredentials = credentials.update(authorizedClient.getAccessToken().getTokenValue(),
-                LocalDateTime.ofInstant(authorizedClient.getAccessToken().getExpiresAt(), ZoneOffset.UTC));
+        OAuth2Credentials updatedCredentials = credentials.update(
+                authorizedClient.getAccessToken().getTokenValue(),
+                LocalDateTime.ofInstant(
+                        authorizedClient.getAccessToken().getExpiresAt(),
+                        ZoneOffset.UTC)
+        );
 
         OAuth2Credentials newCredentials = oAuth2CredentialsRepository.update(updatedCredentials);
 
-        eventBus.post(OAuth2CredentialsUpdated.builder()
-                .oAuth2Credentials(newCredentials)
-                .build());
+//        eventBus.post(OAuth2CredentialsUpdated.builder()
+//                .oAuth2Credentials(newCredentials)
+//                .build());
 
         return newCredentials;
     }

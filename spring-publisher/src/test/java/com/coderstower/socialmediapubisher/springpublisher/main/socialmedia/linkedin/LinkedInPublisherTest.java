@@ -17,6 +17,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriTemplate;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -45,7 +46,7 @@ class LinkedInPublisherTest {
     public void before() {
         this.now = ZonedDateTime.of(2020, 3, 3, 5, 6, 8, 1, ZoneId.of("UTC"));
         this.linkedInPublisher = new LinkedInPublisher("linkedin", oauth2CredentialsRepository, restTemplate, Clock
-                .fixed(now.toInstant(), ZoneId.of("UTC")), "http://localhost:8080/oauth2/%1s/credentials");
+                .fixed(now.toInstant(), ZoneId.of("UTC")), new UriTemplate("http://localhost:8080/oauth2/{social-media}/credentials"));
     }
 
     @Test

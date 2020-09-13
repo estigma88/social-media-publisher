@@ -4,6 +4,11 @@
 #  level:
 #    root: WARN
 
+social-media-publisher:
+  credentials:
+    login-host: 'http://localhost:8080'
+    login-url: '${social-media-publisher.credentials.login-host}/oauth2/{social-media-id}/credentials'
+
 spring:
   main:
     allow-bean-definition-overriding: true

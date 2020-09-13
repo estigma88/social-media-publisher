@@ -107,7 +107,7 @@ $ curl -s https://xxxxxxx.execute-api.us-west-2.amazonaws.com/Prod/ping | python
 }
 ```
 
-SPRING_APPLICATION_JSON={ "social-media-publisher": { "principal-names-allowed": { "linkedin": "xx" }, "credentials": { "login-url": "https://xx.us-east-1.amazonaws.com/prod/oauth2/%1s/credentials" } }, "spring": { "profiles": { "active": "linkedin,twitter" }, "security": { "oauth2": { "client": { "registration": { "linkedin": { "client-id": "xx", "client-secret": "xx" } } } } } } }
+SPRING_APPLICATION_JSON={ "social-media-publisher": { "principal-names-allowed": { "linkedin": "xx" }, "credentials": { "login-host": "https://xx.us-east-1.amazonaws.com/" } }, "spring": { "profiles": { "active": "linkedin,twitter" }, "security": { "oauth2": { "client": { "registration": { "linkedin": { "client-id": "xx", "client-secret": "xx" } } } } } } }
 
 docker run -p 8000:8000 amazon/dynamodb-local -jar DynamoDBLocal.jar -inMemory -sharedDb
  
@@ -116,3 +116,4 @@ aws dynamodb list-tables --endpoint-url http://localhost:8000
 aws dynamodb create-table --table-name OAuth1Credentials --attribute-definitions AttributeName=id,AttributeType=S --key-schema AttributeName=id,KeyType=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 --endpoint-url http://localhost:8000
 aws dynamodb create-table --table-name OAuth2Credentials --attribute-definitions AttributeName=id,AttributeType=S --key-schema AttributeName=id,KeyType=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 --endpoint-url http://localhost:8000
 aws dynamodb create-table --table-name Posts --attribute-definitions AttributeName=id,AttributeType=S --key-schema AttributeName=id,KeyType=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 --endpoint-url http://localhost:8000
+aws dynamodb create-table --table-name OAuth2AuthorizationRequest --attribute-definitions AttributeName=id,AttributeType=S --key-schema AttributeName=id,KeyType=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 --endpoint-url http://localhost:8000

@@ -1,6 +1,8 @@
 package com.coderstower.socialmediapubisher.springpublisher.main.security;
 
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.OAuth2AccessTokenResponseConverterWithDefaults;
+import com.coderstower.socialmediapubisher.springpublisher.main.factory.SocialMediaPublisherProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
@@ -8,13 +10,17 @@ import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
 import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -22,27 +28,45 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 public class SecurityFactory {
+
+    @Bean
+    public AuthenticationSuccessHandler redirectAwareAuthenticationSuccessHandler(SocialMediaPublisherProperties socialMediaPublisherProperties){
+        return new RedirectAwareAuthenticationSuccessHandler(socialMediaPublisherProperties.getCredentials().getLoginUrl());
+    }
+
     @Order(1)
     @Profile("linkedin")
     @Configuration
     public static class LinkedinSecurity extends WebSecurityConfigurerAdapter {
+        private final AuthenticationSuccessHandler authenticationSuccessHandler;
         private final ClientRegistrationRepository clientRegistrationRepository;
+        private final AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository;
 
-        public LinkedinSecurity(ClientRegistrationRepository clientRegistrationRepository) {
+        public LinkedinSecurity(AuthenticationSuccessHandler authenticationSuccessHandler, ClientRegistrationRepository clientRegistrationRepository, AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository) {
+            this.authenticationSuccessHandler = authenticationSuccessHandler;
             this.clientRegistrationRepository = clientRegistrationRepository;
+            this.authorizationRequestRepository = authorizationRequestRepository;
         }
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http
+                    .sessionManagement(sessionManagementConfigurer -> sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                    .requestCache()
+                    .requestCache(null)
+                    .and()
                     .authorizeRequests()
                     .antMatchers("/oauth2/linkedin/credentials").authenticated()
                     .and()
                     .oauth2Login()
+                    .successHandler(authenticationSuccessHandler)
                     /*
                     Create a new ClientRegistrationRepository with only Linkedin configuration to avoid
                     using other OAuth2 configuration over this endpoint
                      */
+                    .authorizationEndpoint()
+                    .authorizationRequestRepository(authorizationRequestRepository)
+                    .and()
                     .clientRegistrationRepository(new InMemoryClientRegistrationRepository(clientRegistrationRepository.findByRegistrationId("linkedin")))
                     .tokenEndpoint()
                     .accessTokenResponseClient(authorizationCodeTokenResponseClient());
