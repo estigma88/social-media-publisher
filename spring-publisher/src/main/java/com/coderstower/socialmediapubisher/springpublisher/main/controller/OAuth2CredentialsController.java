@@ -28,9 +28,9 @@ public class OAuth2CredentialsController {
      * Needs to be a GET to allow access from the browser and the whole 0Auth2 flow
      */
     @RequestMapping(path = "/oauth2/{socialAccount}/credentials", method = RequestMethod.GET)
-    public ResponseEntity<Void> updateOAuth2Credentials(@RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient, @PathVariable String socialAccount) {
+    public ResponseEntity<String> updateOAuth2Credentials(@RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient, @PathVariable String socialAccount) {
         oAuth2CredentialsManager.update(authorizedClient, socialAccount);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Credentials updated");
     }
 }

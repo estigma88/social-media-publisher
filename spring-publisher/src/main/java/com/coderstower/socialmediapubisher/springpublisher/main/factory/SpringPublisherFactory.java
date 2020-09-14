@@ -1,16 +1,13 @@
 package com.coderstower.socialmediapubisher.springpublisher.main.factory;
 
-import com.coderstower.socialmediapubisher.springpublisher.abstraction.EventHandler;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.PostPublisher;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.repository.PostRepository;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.SocialMediaPublisher;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.OAuth2CredentialsManager;
-import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.OAuth2CredentialsUpdated;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.repository.OAuth1CredentialsRepository;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.repository.OAuth2CredentialsRepository;
 import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.linkedin.LinkedInPublisher;
 import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.twitter.TwitterPublisher;
-import com.google.common.eventbus.EventBus;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +24,7 @@ import java.util.List;
 @EnableConfigurationProperties({SocialMediaPublisherProperties.class})
 public class SpringPublisherFactory {
     @Bean
-    public Clock clock(){
+    public Clock clock() {
         return Clock.systemDefaultZone();
     }
 
@@ -44,31 +41,17 @@ public class SpringPublisherFactory {
 
     @Bean
     @Profile("linkedin")
-    public LinkedInPublisher linkedInPublisher(OAuth2CredentialsRepository oauth2CredentialsRepository, RestTemplate restTemplate, Clock clock, SocialMediaPublisherProperties socialMediaPublisherProperties){
+    public LinkedInPublisher linkedInPublisher(OAuth2CredentialsRepository oauth2CredentialsRepository, RestTemplate restTemplate, Clock clock, SocialMediaPublisherProperties socialMediaPublisherProperties) {
         return new LinkedInPublisher("linkedin", oauth2CredentialsRepository, restTemplate, clock, socialMediaPublisherProperties.getCredentials().getLoginUrl());
     }
 
     @Bean
-    public OAuth2CredentialsManager oAuth2CredentialsManager(OAuth2CredentialsRepository oAuth2CredentialsRepository, SocialMediaPublisherProperties socialMediaPublisherProperties, EventBus eventBus){
-        return new OAuth2CredentialsManager(oAuth2CredentialsRepository, socialMediaPublisherProperties.getPrincipalNamesAllowed(), eventBus);
+    public OAuth2CredentialsManager oAuth2CredentialsManager(OAuth2CredentialsRepository oAuth2CredentialsRepository, SocialMediaPublisherProperties socialMediaPublisherProperties) {
+        return new OAuth2CredentialsManager(oAuth2CredentialsRepository, socialMediaPublisherProperties.getPrincipalNamesAllowed());
     }
 
     @Bean
-    public EventHandler<OAuth2CredentialsUpdated> oAuth2CredentialsUpdatedListener(EventBus eventBus, PostPublisher postPublisher){
-        EventHandler<OAuth2CredentialsUpdated> eventHandler = (event) -> postPublisher.publishNext();
-
-        eventBus.register(eventHandler);
-
-        return eventHandler;
-    }
-
-    @Bean
-    public EventBus eventBus(){
-        return new EventBus();
-    }
-
-    @Bean
-    public RestTemplate restTemplate(){
+    public RestTemplate restTemplate() {
         return new RestTemplate();
     }
 

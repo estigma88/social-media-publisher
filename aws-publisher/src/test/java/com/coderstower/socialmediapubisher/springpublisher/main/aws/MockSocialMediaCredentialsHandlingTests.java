@@ -11,9 +11,6 @@ import com.amazonaws.services.dynamodbv2.model.KeyType;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
 import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
-import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.OAuth2CredentialsUpdated;
-import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.repository.OAuth2Credentials;
-import com.google.common.eventbus.EventBus;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -57,7 +54,8 @@ import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -69,14 +67,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SetSystemProperty(key = "sqlite4java.library.path", value = "target/native-libs")
 @TestPropertySource(properties = {"social-media-publisher.principal-names-allowed.linkedin=myuser"})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ActiveProfiles({"linkedin", "twitter"})
+@ActiveProfiles({"linkedin", "twitter, secure"})
 class MockSocialMediaCredentialsHandlingTests {
     @Autowired
     private MockMvc mvc;
     @MockBean
     private Twitter twitter;
-    @MockBean
-    private EventBus eventBus;
     @MockBean
     private OAuth2AuthorizedClientService authorizedClientService;
     @Autowired
@@ -118,14 +114,6 @@ class MockSocialMediaCredentialsHandlingTests {
                 .with(authentication(authenticationToken))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-
-        verify(eventBus).post(OAuth2CredentialsUpdated.builder()
-                .oAuth2Credentials(OAuth2Credentials.builder()
-                        .id("linkedin")
-                        .accessToken("newAccessToken")
-                        .expirationDate(LocalDateTime.of(2020, 5, 3, 5, 6, 8, 1))
-                        .build())
-                .build());
     }
 
     private OAuth2AuthorizedClient createAuthorizedClient(OAuth2AuthenticationToken authenticationToken) {

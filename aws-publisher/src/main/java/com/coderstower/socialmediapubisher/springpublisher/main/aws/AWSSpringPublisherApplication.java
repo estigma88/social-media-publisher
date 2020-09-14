@@ -4,7 +4,7 @@ import com.coderstower.socialmediapubisher.springpublisher.main.controller.Error
 import com.coderstower.socialmediapubisher.springpublisher.main.controller.OAuth2CredentialsController;
 import com.coderstower.socialmediapubisher.springpublisher.main.controller.PostsController;
 import com.coderstower.socialmediapubisher.springpublisher.main.factory.SpringPublisherFactory;
-import com.coderstower.socialmediapubisher.springpublisher.main.security.SecurityFactory;
+import com.coderstower.socialmediapubisher.springpublisher.main.factory.SecurityFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
