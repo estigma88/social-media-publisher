@@ -153,12 +153,12 @@ class MockSocialMediaSuccessfulTests {
         public AmazonDynamoDB amazonDynamoDB() {
             AmazonDynamoDB ddb = DynamoDBEmbedded.create().amazonDynamoDB();
 
-            createTable(ddb, "OAuth1Credentials", "id");
-            createTable(ddb, "OAuth2Credentials", "id");
+            createTable(ddb, "Oauth1Credentials", "id");
+            createTable(ddb, "Oauth2Credentials", "id");
             createTable(ddb, "Posts", "id");
 
             PutItemRequest oauth2Credentials = new PutItemRequest();
-            oauth2Credentials.setTableName("OAuth2Credentials");
+            oauth2Credentials.setTableName("Oauth2Credentials");
             oauth2Credentials.addItemEntry("id", new AttributeValue("linkedin"));
             oauth2Credentials.addItemEntry("accessToken", new AttributeValue("access123"));
             oauth2Credentials.addItemEntry("expirationDate", new AttributeValue("2020-04-01T05:05:05"));
@@ -166,7 +166,7 @@ class MockSocialMediaSuccessfulTests {
             ddb.putItem(oauth2Credentials);
 
             PutItemRequest oauth1Credentials = new PutItemRequest();
-            oauth1Credentials.setTableName("OAuth1Credentials");
+            oauth1Credentials.setTableName("Oauth1Credentials");
             oauth1Credentials.addItemEntry("id", new AttributeValue("twitter"));
             oauth1Credentials.addItemEntry("accessToken", new AttributeValue("access123"));
             oauth1Credentials.addItemEntry("consumerKey", new AttributeValue("consumer123"));

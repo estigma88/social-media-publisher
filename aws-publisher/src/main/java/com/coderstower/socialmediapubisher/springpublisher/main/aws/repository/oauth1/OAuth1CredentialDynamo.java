@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@DynamoDBTable(tableName = "OAuth1Credentials")
+@DynamoDBTable(tableName = "Oauth1Credentials")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

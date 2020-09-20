@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
-@DynamoDBTable(tableName = "OAuth2Credentials")
+@DynamoDBTable(tableName = "Oauth2Credentials")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
