@@ -108,6 +108,7 @@ $ curl -s https://xxxxxxx.execute-api.us-west-2.amazonaws.com/Prod/ping | python
 ```
 
 SPRING_APPLICATION_JSON={ "social-media-publisher": { "principal-names-allowed": { "linkedin": "xx" }, "credentials": { "login-host": "https://xx.us-east-1.amazonaws.com/" } }, "spring": { "profiles": { "active": "linkedin,twitter" }, "security": { "oauth2": { "client": { "registration": { "linkedin": { "client-id": "xx", "client-secret": "xx" } } } } } } }
+SPRING_APPLICATION_JSON={ "spring": { "profiles": { "active": "linkedin,twitter" }}}
 
 docker run -p 8000:8000 amazon/dynamodb-local -jar DynamoDBLocal.jar -inMemory -sharedDb
  

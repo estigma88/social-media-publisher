@@ -25,7 +25,10 @@ public class SpringPublisherDynamoDBRepositoryFactory {
     @Bean("amazonDynamoDB")
     @Profile("!local")
     public AmazonDynamoDB amazonDynamoDB() {
-        return AmazonDynamoDBClientBuilder.defaultClient();
+        return AmazonDynamoDBClientBuilder
+                .standard()
+                .withRegion(Regions.US_EAST_1)
+                .build();
     }
 
     @Bean("amazonDynamoDB")
