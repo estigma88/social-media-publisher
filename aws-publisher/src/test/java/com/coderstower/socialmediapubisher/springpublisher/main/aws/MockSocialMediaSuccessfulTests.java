@@ -31,6 +31,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.client.RestTemplate;
 import twitter4j.Paging;
@@ -47,6 +48,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -54,7 +56,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @SetSystemProperty(key = "sqlite4java.library.path", value = "target/native-libs")
-class MockSocialMediaTests {
+@ActiveProfiles({"linkedin", "twitter"})
+class MockSocialMediaSuccessfulTests {
     @Autowired
     private MockMvc mvc;
     @MockBean
@@ -76,6 +79,7 @@ class MockSocialMediaTests {
         mockingLinkedIn();
 
         mvc.perform(post("/posts/next")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content()

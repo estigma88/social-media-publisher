@@ -4,8 +4,8 @@ import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.repo
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.Acknowledge;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.Publication;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.SocialMediaPublisher;
-import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.repository.credential.Oauth1Credentials;
-import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.repository.credential.Oauth1CredentialsRepository;
+import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.repository.OAuth1Credentials;
+import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.repository.OAuth1CredentialsRepository;
 import lombok.extern.slf4j.Slf4j;
 import twitter4j.Paging;
 import twitter4j.Status;
@@ -22,11 +22,11 @@ import java.util.Objects;
 @Slf4j
 public class TwitterPublisher implements SocialMediaPublisher {
     private final String name;
-    private final Oauth1CredentialsRepository oauth1CredentialsRepository;
+    private final OAuth1CredentialsRepository oauth1CredentialsRepository;
     private final Twitter twitter;
     private final Clock clock;
 
-    public TwitterPublisher(String name, Oauth1CredentialsRepository oauth1CredentialsRepository, Twitter twitter, Clock clock) {
+    public TwitterPublisher(String name, OAuth1CredentialsRepository oauth1CredentialsRepository, Twitter twitter, Clock clock) {
         this.name = name;
         this.oauth1CredentialsRepository = oauth1CredentialsRepository;
         this.twitter = twitter;
@@ -40,7 +40,7 @@ public class TwitterPublisher implements SocialMediaPublisher {
 
     @Override
     public Acknowledge ping() {
-        Oauth1Credentials credentials = oauth1CredentialsRepository.getCredentials(name)
+        OAuth1Credentials credentials = oauth1CredentialsRepository.getCredentials(name)
                 .orElseThrow(() -> new IllegalArgumentException("The credentials for " + name + " doesn't exist"));
 
         try {
@@ -73,7 +73,7 @@ public class TwitterPublisher implements SocialMediaPublisher {
 
     @Override
     public Publication publish(Post post) {
-        Oauth1Credentials credentials = oauth1CredentialsRepository.getCredentials(name)
+        OAuth1Credentials credentials = oauth1CredentialsRepository.getCredentials(name)
                 .orElseThrow(() -> new IllegalArgumentException("The credentials for " + name + " doesn't exist"));
 
         try {
@@ -108,7 +108,7 @@ public class TwitterPublisher implements SocialMediaPublisher {
         }
     }
 
-    private void setCredentials(Twitter twitter, Oauth1Credentials credentials) {
+    private void setCredentials(Twitter twitter, OAuth1Credentials credentials) {
         AccessToken accessToken = new AccessToken(credentials.getAccessToken(), credentials.getTokenSecret());
         twitter.setOAuthConsumer(credentials.getConsumerKey(), credentials.getConsumerSecret());
         twitter.setOAuthAccessToken(accessToken);

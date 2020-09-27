@@ -1,23 +1,21 @@
 package com.coderstower.socialmediapubisher.springpublisher.main.aws;
 
+import com.coderstower.socialmediapubisher.springpublisher.main.controller.ErrorHandler;
+import com.coderstower.socialmediapubisher.springpublisher.main.controller.OAuth2CredentialsController;
 import com.coderstower.socialmediapubisher.springpublisher.main.controller.PostsController;
 import com.coderstower.socialmediapubisher.springpublisher.main.factory.SpringPublisherFactory;
+import com.coderstower.socialmediapubisher.springpublisher.main.factory.SecurityFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 
 @SpringBootApplication
 // We use direct @Import instead of @ComponentScan to speed up cold starts
 // @ComponentScan(basePackages = "my.service.controller")
-@Import({PostsController.class, SpringPublisherFactory.class, SpringPublisherDynamoDBRepositoryFactory.class})
+@Import({PostsController.class, OAuth2CredentialsController.class, SecurityFactory.class,
+        SpringPublisherFactory.class, SpringPublisherDynamoDBRepositoryFactory.class, ErrorHandler.class})
 public class AWSSpringPublisherApplication extends SpringBootServletInitializer {
 
     /*
@@ -45,7 +43,7 @@ public class AWSSpringPublisherApplication extends SpringBootServletInitializer 
      *
      * To enable custom @ControllerAdvice classes remove this bean.
      */
-    @Bean
+    /*@Bean
     public HandlerExceptionResolver handlerExceptionResolver() {
         return new HandlerExceptionResolver() {
 
@@ -54,7 +52,7 @@ public class AWSSpringPublisherApplication extends SpringBootServletInitializer 
                 return null;
             }
         };
-    }
+    }*/
 
     public static void main(String[] args) {
         SpringApplication.run(AWSSpringPublisherApplication.class, args);

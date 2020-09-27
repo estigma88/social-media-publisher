@@ -53,20 +53,6 @@ public class StreamLambdaHandlerTest {
         assertTrue(response.getMultiValueHeaders().getFirst(HttpHeaders.CONTENT_TYPE).startsWith(MediaType.APPLICATION_JSON));
     }
 
-    @Test
-    public void invalidResource_streamRequest_responds404() {
-        InputStream requestStream = new AwsProxyRequestBuilder("/pong", HttpMethod.GET)
-                                            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                                            .buildStream();
-        ByteArrayOutputStream responseStream = new ByteArrayOutputStream();
-
-        handle(requestStream, responseStream);
-
-        AwsProxyResponse response = readResponse(responseStream);
-        assertNotNull(response);
-        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatusCode());
-    }
-
     private void handle(InputStream is, ByteArrayOutputStream os) {
         try {
             handler.handleRequest(is, os, lambdaContext);

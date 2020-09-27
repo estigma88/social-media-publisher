@@ -1,28 +1,27 @@
-package com.coderstower.socialmediapubisher.springpublisher.main.aws.repository.oauth2;
+package com.coderstower.socialmediapubisher.springpublisher.main.aws.repository.oauth1;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted;
-import com.coderstower.socialmediapubisher.springpublisher.main.aws.repository.LocalDateTimeConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
-@DynamoDBTable(tableName = "Oauth2Credentials")
+@DynamoDBTable(tableName = "Oauth1Credentials")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Oauth2CredentialDynamo {
+public class OAuth1CredentialDynamo {
     @DynamoDBHashKey
     private String id;
     @DynamoDBAttribute
+    private String consumerKey;
+    @DynamoDBAttribute
+    private String consumerSecret;
+    @DynamoDBAttribute
     private String accessToken;
     @DynamoDBAttribute
-    @DynamoDBTypeConverted(converter = LocalDateTimeConverter.class)
-    private LocalDateTime expirationDate;
+    private String tokenSecret;
 }

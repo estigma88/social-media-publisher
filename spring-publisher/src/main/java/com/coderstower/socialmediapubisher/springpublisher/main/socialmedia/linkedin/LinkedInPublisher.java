@@ -4,8 +4,9 @@ import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.repo
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.Acknowledge;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.Publication;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.SocialMediaPublisher;
-import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.repository.credential.Oauth2Credentials;
-import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.repository.credential.Oauth2CredentialsRepository;
+import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.UnauthorizedException;
+import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.repository.OAuth2Credentials;
+import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.repository.OAuth2CredentialsRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriTemplate;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -21,15 +23,17 @@ import java.util.Objects;
 @Slf4j
 public class LinkedInPublisher implements SocialMediaPublisher {
     private final String name;
-    private final Oauth2CredentialsRepository oauth2CredentialsRepository;
+    private final OAuth2CredentialsRepository oauth2CredentialsRepository;
     private final RestTemplate restTemplate;
     private final Clock clock;
+    private final UriTemplate loginURL;
 
-    public LinkedInPublisher(String name, Oauth2CredentialsRepository oauth2CredentialsRepository, RestTemplate restTemplate, Clock clock) {
+    public LinkedInPublisher(String name, OAuth2CredentialsRepository oauth2CredentialsRepository, RestTemplate restTemplate, Clock clock, UriTemplate loginURL) {
         this.name = name;
         this.oauth2CredentialsRepository = oauth2CredentialsRepository;
         this.restTemplate = restTemplate;
         this.clock = clock;
+        this.loginURL = loginURL;
     }
 
     @Override
@@ -39,14 +43,11 @@ public class LinkedInPublisher implements SocialMediaPublisher {
 
     @Override
     public Acknowledge ping() {
-        Oauth2Credentials credentials = oauth2CredentialsRepository.getCredentials(name)
+        OAuth2Credentials credentials = oauth2CredentialsRepository.getCredentials(name)
                 .orElseThrow(() -> new IllegalArgumentException("The credentials for " + name + " doesn't exist"));
 
         if (areCredentialsExpired(credentials)) {
-            return Acknowledge.builder()
-                    .status(Acknowledge.Status.FAILURE)
-                    .description("Credentials expired")
-                    .build();
+            throw new UnauthorizedException("Unauthorized. Please login again here: " + loginURL.expand(name));
         } else {
             return Acknowledge.builder()
                     .status(Acknowledge.Status.SUCCESS)
@@ -56,7 +57,7 @@ public class LinkedInPublisher implements SocialMediaPublisher {
 
     @Override
     public Publication publish(Post post) {
-        Oauth2Credentials credentials = oauth2CredentialsRepository.getCredentials(name)
+        OAuth2Credentials credentials = oauth2CredentialsRepository.getCredentials(name)
                 .orElseThrow(() -> new IllegalArgumentException("The credentials for " + name + " doesn't exist"));
 
         try {
@@ -115,7 +116,7 @@ public class LinkedInPublisher implements SocialMediaPublisher {
         }
     }
 
-    private String publish(LinkedInShare linkedInShare, Oauth2Credentials credentials) {
+    private String publish(LinkedInShare linkedInShare, OAuth2Credentials credentials) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.add("X-Restli-Protocol-Version", "2.0.0");
@@ -132,7 +133,7 @@ public class LinkedInPublisher implements SocialMediaPublisher {
         return response.getHeaders().getFirst("X-RestLi-Id");
     }
 
-    private Profile getProfile(Oauth2Credentials credentials) {
+    private Profile getProfile(OAuth2Credentials credentials) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.add("X-Restli-Protocol-Version", "2.0.0");
@@ -149,7 +150,7 @@ public class LinkedInPublisher implements SocialMediaPublisher {
         return response.getBody();
     }
 
-    private boolean areCredentialsExpired(Oauth2Credentials credentials) {
+    private boolean areCredentialsExpired(OAuth2Credentials credentials) {
         return credentials.getExpirationDate().isBefore(LocalDateTime.now(clock));
     }
 }

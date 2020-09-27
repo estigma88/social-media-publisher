@@ -3,8 +3,9 @@ package com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.lin
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.repository.Post;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.Acknowledge;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.Publication;
-import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.repository.credential.Oauth2Credentials;
-import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.socialmedia.repository.credential.Oauth2CredentialsRepository;
+import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.UnauthorizedException;
+import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.repository.OAuth2Credentials;
+import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.repository.OAuth2CredentialsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriTemplate;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -33,7 +35,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class LinkedInPublisherTest {
     @Mock
-    private Oauth2CredentialsRepository oauth2CredentialsRepository;
+    private OAuth2CredentialsRepository oauth2CredentialsRepository;
     @Mock
     private RestTemplate restTemplate;
 
@@ -44,7 +46,7 @@ class LinkedInPublisherTest {
     public void before() {
         this.now = ZonedDateTime.of(2020, 3, 3, 5, 6, 8, 1, ZoneId.of("UTC"));
         this.linkedInPublisher = new LinkedInPublisher("linkedin", oauth2CredentialsRepository, restTemplate, Clock
-                .fixed(now.toInstant(), ZoneId.of("UTC")));
+                .fixed(now.toInstant(), ZoneId.of("UTC")), new UriTemplate("http://localhost:8080/oauth2/{social-media}/credentials"));
     }
 
     @Test
@@ -58,21 +60,18 @@ class LinkedInPublisherTest {
 
     @Test
     public void ping_expiredCredential_exception() {
-        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(Oauth2Credentials.builder()
+        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(OAuth2Credentials.builder()
                 .expirationDate(now.toLocalDateTime().minusMonths(1))
                 .build()));
 
-        Acknowledge ack = linkedInPublisher.ping();
+        UnauthorizedException exception = assertThrows(UnauthorizedException.class, () -> linkedInPublisher.ping());
 
-        assertThat(ack).isEqualTo(Acknowledge.builder()
-                .status(Acknowledge.Status.FAILURE)
-                .description("Credentials expired")
-                .build());
+        assertThat(exception.getMessage()).isEqualTo("Unauthorized. Please login again here: http://localhost:8080/oauth2/linkedin/credentials");
     }
 
     @Test
     public void ping_goodCredential_success() {
-        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(Oauth2Credentials.builder()
+        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(OAuth2Credentials.builder()
                 .expirationDate(now.toLocalDateTime().plusMonths(1))
                 .build()));
 
@@ -92,7 +91,7 @@ class LinkedInPublisherTest {
 
         HttpEntity<Void> requestEntityProfile = new HttpEntity<>(httpHeadersProfile);
 
-        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(Oauth2Credentials.builder()
+        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(OAuth2Credentials.builder()
                 .accessToken("accessToken")
                 .build()));
         when(restTemplate.exchange("https://api.linkedin.com/v2/me", HttpMethod.GET, requestEntityProfile, Profile.class))
@@ -114,7 +113,7 @@ class LinkedInPublisherTest {
         httpHeaders.add("X-Restli-Protocol-Version", "2.0.0");
         httpHeaders.setBearerAuth("accessToken");
 
-        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(Oauth2Credentials.builder()
+        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(OAuth2Credentials.builder()
                 .accessToken("accessToken")
                 .build()));
 
@@ -179,7 +178,7 @@ class LinkedInPublisherTest {
         httpHeaders.add("X-Restli-Protocol-Version", "2.0.0");
         httpHeaders.setBearerAuth("accessToken");
 
-        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(Oauth2Credentials.builder()
+        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(OAuth2Credentials.builder()
                 .accessToken("accessToken")
                 .build()));
 
@@ -244,7 +243,7 @@ class LinkedInPublisherTest {
         httpHeaders.add("X-Restli-Protocol-Version", "2.0.0");
         httpHeaders.setBearerAuth("accessToken");
 
-        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(Oauth2Credentials.builder()
+        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(OAuth2Credentials.builder()
                 .accessToken("accessToken")
                 .build()));
 
