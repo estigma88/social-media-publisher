@@ -25,13 +25,6 @@ public class PostAWSRepository implements PostRepository {
     }
 
     @Override
-    public Optional<Post> getNextToPublish() {
-        return StreamSupport.stream(postDynamoRepository.findAll().spliterator(), false)
-                .min(Comparator.comparing(PostDynamo::getPublishedDate))
-                .map(this::convert);
-    }
-
-    @Override
     public Post update(Post post) {
         return convert(postDynamoRepository.save(convert(post)));
     }
