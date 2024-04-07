@@ -30,8 +30,8 @@ public class SpringPublisherFactory {
     }
 
     @Bean
-    public PostPublisher postPublisher(List<SocialMediaPublisher> socialMediaPublishers, PostRepository postRepository, Clock clock, @Value("${social-media-publisher.groups}") List<String> groups) {
-        return new PostPublisher(socialMediaPublishers, postRepository, clock, groups);
+    public PostPublisher postPublisher(List<SocialMediaPublisher> socialMediaPublishers, PostRepository postRepository, Clock clock, SocialMediaPublisherProperties socialMediaPublisherProperties) {
+        return new PostPublisher(socialMediaPublishers, postRepository, clock, socialMediaPublisherProperties.getGroups());
     }
 
     @Bean

@@ -183,6 +183,7 @@ class MockSocialMediaSuccessfulTests {
             post1.addItemEntry("tags", new AttributeValue().withL(new AttributeValue("tag1"), new AttributeValue("tag2")));
             post1.addItemEntry("url", new AttributeValue("https://coderstower.com/2020/02/18/unit-tests-vs-integration-tests/"));
             post1.addItemEntry("publishedDate", new AttributeValue("2013-09-17T18:47:52"));
+            post1.addItemEntry("group", new AttributeValue("group1"));
 
             ddb.putItem(post1);
 
@@ -194,6 +195,7 @@ class MockSocialMediaSuccessfulTests {
             post2.addItemEntry("tags", new AttributeValue().withL(new AttributeValue("tag1"), new AttributeValue("tag2")));
             post2.addItemEntry("url", new AttributeValue("https://coderstower.com/2020/01/13/open-close-principle-by-example/"));
             post2.addItemEntry("publishedDate", new AttributeValue("2012-09-17T18:47:52"));
+            post2.addItemEntry("group", new AttributeValue("group1"));
 
             ddb.putItem(post2);
 

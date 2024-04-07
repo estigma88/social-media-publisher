@@ -5,6 +5,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
+import java.util.List;
 import java.util.Map;
 
 @ConfigurationProperties(prefix = "social-media-publisher")
@@ -14,4 +15,5 @@ import java.util.Map;
 public class SocialMediaPublisherProperties {
     private final Map<String, String> principalNamesAllowed;
     private final CredentialsProperties credentials;
+    private final List<String> groups;
 }

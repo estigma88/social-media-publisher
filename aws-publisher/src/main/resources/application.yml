@@ -6,7 +6,7 @@
 
 social-media-publisher:
   groups:
-    - java-quiz
+    - group1
   credentials:
     login-host: 'http://localhost:8080'
     login-url: '${social-media-publisher.credentials.login-host}/oauth2/{social-media-id}/credentials'
