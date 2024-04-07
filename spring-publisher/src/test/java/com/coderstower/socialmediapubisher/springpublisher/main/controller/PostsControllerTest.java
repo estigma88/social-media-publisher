@@ -27,7 +27,7 @@ class PostsControllerTest {
     private PostsController postsController;
 
     @Test
-    public void ping(){
+    public void ping() {
         Map<String, String> result = postsController.ping();
 
         Map<String, String> pong = new HashMap<>();
@@ -38,7 +38,7 @@ class PostsControllerTest {
 
     @Test
     public void postNext() throws MalformedURLException {
-        when(postPublisher.publishNext(group)).thenReturn(List.of(Post.builder()
+        when(postPublisher.publishNext("group1")).thenReturn(Post.builder()
                 .id("2")
                 .name("My Post 2")
                 .description("My second post")
@@ -49,11 +49,12 @@ class PostsControllerTest {
                         .status(Publication.Status.FAILURE)
                         .publisher("twitter")
                         .build()))
-                .build()));
+                .group("group1")
+                .build());
 
-        List<Post> result = postsController.postNext();
+        Post result = postsController.postNext("group1");
 
-        assertThat(result).isEqualTo(List.of(Post.builder()
+        assertThat(result).isEqualTo(Post.builder()
                 .id("2")
                 .name("My Post 2")
                 .description("My second post")
@@ -64,7 +65,8 @@ class PostsControllerTest {
                         .status(Publication.Status.FAILURE)
                         .publisher("twitter")
                         .build()))
-                .build()));
+                .group("group1")
+                .build());
     }
 
 }
