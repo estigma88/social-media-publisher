@@ -8,7 +8,6 @@ import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.repository.OAuth2CredentialsRepository;
 import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.linkedin.LinkedInPublisher;
 import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.twitter.TwitterPublisher;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,8 +29,8 @@ public class SpringPublisherFactory {
     }
 
     @Bean
-    public PostPublisher postPublisher(List<SocialMediaPublisher> socialMediaPublishers, PostRepository postRepository, Clock clock, SocialMediaPublisherProperties socialMediaPublisherProperties) {
-        return new PostPublisher(socialMediaPublishers, postRepository, clock, socialMediaPublisherProperties.getGroups());
+    public PostPublisher postPublisher(List<SocialMediaPublisher> socialMediaPublishers, PostRepository postRepository, Clock clock) {
+        return new PostPublisher(socialMediaPublishers, postRepository, clock);
     }
 
     @Bean

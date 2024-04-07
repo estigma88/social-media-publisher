@@ -8,8 +8,6 @@ import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.soci
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,43 +16,29 @@ public class PostPublisher {
     private final PostRepository postRepository;
     private final Clock clock;
 
-    private final List<String> groupsToPublish;
-
-    public PostPublisher(List<SocialMediaPublisher> socialMediaPublishers, PostRepository postRepository, Clock clock, List<String> groupsToPublish) {
+    public PostPublisher(List<SocialMediaPublisher> socialMediaPublishers, PostRepository postRepository, Clock clock) {
         this.socialMediaPublishers = socialMediaPublishers;
         this.postRepository = postRepository;
         this.clock = clock;
-        this.groupsToPublish = groupsToPublish;
     }
 
-    public List<Post> publishNext() {
+    public Post publishNext(String group) {
         ping(socialMediaPublishers);
 
-        List<Post> posts = postRepository.findAll();
-        List<Post> published = new ArrayList<>();
+        Post nextPost = postRepository.getNextToPublish(group)
+                .orElseThrow(() -> new IllegalStateException("There is not next post to publish"));
 
-        for (String group : groupsToPublish) {
-            Post nextPost = posts.stream()
-                    .filter(post -> group.equals(post.getGroup()))
-                    .min(Comparator.comparing(Post::getPublishedDate))
-                    .orElseThrow(() -> new IllegalStateException("There is not next post to publish"));
+        List<Publication> publishedPosts = publish(socialMediaPublishers, nextPost);
 
-            List<Publication> publishedPosts = publish(socialMediaPublishers, nextPost);
+        if (publishedWellOK(publishedPosts)) {
+            Post toUpdate = nextPost.updateLastDatePublished(LocalDateTime.now(clock));
 
-            if (publishedWellOK(publishedPosts)) {
-                Post toUpdate = nextPost.updateLastDatePublished(LocalDateTime.now(clock));
-
-                Post publishedPost = postRepository.update(toUpdate)
-                        .updatePublications(publishedPosts);
-
-                published.add(publishedPost);
-            } else {
-                throw new IllegalStateException("Error publishing the post: " + nextPost
-                        .updatePublications(publishedPosts));
-            }
+            return postRepository.update(toUpdate)
+                    .updatePublications(publishedPosts);
+        } else {
+            throw new IllegalStateException("Error publishing the post: " + nextPost
+                    .updatePublications(publishedPosts));
         }
-
-        return published;
     }
 
     private boolean publishedWellOK(List<Publication> publishedPosts) {

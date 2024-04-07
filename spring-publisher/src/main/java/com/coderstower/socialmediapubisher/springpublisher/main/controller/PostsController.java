@@ -4,12 +4,12 @@ package com.coderstower.socialmediapubisher.springpublisher.main.controller;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.PostPublisher;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.repository.Post;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -31,11 +31,11 @@ public class PostsController {
         return pong;
     }
 
-    @RequestMapping(path = "/posts/next", method = RequestMethod.POST)
-    public List<Post> postNext() {
-        List<Post> post = postPublisher.publishNext();
+    @RequestMapping(path = "/posts/{group}/next", method = RequestMethod.POST)
+    public Post postNext(@PathVariable String group) {
+        Post post = postPublisher.publishNext(group);
 
-        log.info("Published Post: {}", post);
+        log.info("Published Post from group {}: {}", group, post);
 
         return post;
     }

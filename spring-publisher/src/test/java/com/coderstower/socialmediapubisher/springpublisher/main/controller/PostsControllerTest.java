@@ -38,7 +38,7 @@ class PostsControllerTest {
 
     @Test
     public void postNext() throws MalformedURLException {
-        when(postPublisher.publishNext()).thenReturn(List.of(Post.builder()
+        when(postPublisher.publishNext(group)).thenReturn(List.of(Post.builder()
                 .id("2")
                 .name("My Post 2")
                 .description("My second post")

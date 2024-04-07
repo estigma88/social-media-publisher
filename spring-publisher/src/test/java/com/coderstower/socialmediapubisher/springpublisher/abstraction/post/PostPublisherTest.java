@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -48,7 +47,7 @@ class PostPublisherTest {
                 .status(Acknowledge.Status.FAILURE).build());
         when(socialMediaPublisher2.getName()).thenReturn("LINKEDIN");
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> postPublisher.publishNext());
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> postPublisher.publishNext(group));
 
         assertThat(exception.getMessage()).isEqualTo("Ping to LINKEDIN failed: " + Acknowledge.builder()
                 .status(Acknowledge.Status.FAILURE).build());
@@ -62,7 +61,7 @@ class PostPublisherTest {
         when(socialMediaPublisher2.ping()).thenReturn(Acknowledge.builder()
                 .status(Acknowledge.Status.SUCCESS).build());
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> postPublisher.publishNext());
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> postPublisher.publishNext(group));
 
         assertThat(exception.getMessage()).isEqualTo("There is not next post to publish");
     }
@@ -118,7 +117,7 @@ class PostPublisherTest {
                 .publisher("LINKEDIN")
                 .build());
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> postPublisher.publishNext());
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> postPublisher.publishNext(group));
 
         assertThat(exception.getMessage()).isEqualTo("Error publishing the post: " + expectedPost);
     }
@@ -187,7 +186,7 @@ class PostPublisherTest {
                 .build());
         when(postRepository.update(postUpdated)).thenReturn(postUpdated);
 
-        List<Post> publishedPost = postPublisher.publishNext();
+        List<Post> publishedPost = postPublisher.publishNext(group);
 
         assertThat(publishedPost).isEqualTo(List.of(expectedPost));
     }
