@@ -38,7 +38,7 @@ class PostsControllerTest {
 
     @Test
     public void postNext() throws MalformedURLException {
-        when(postPublisher.publishNext()).thenReturn(Post.builder()
+        when(postPublisher.publishNext()).thenReturn(List.of(Post.builder()
                 .id("2")
                 .name("My Post 2")
                 .description("My second post")
@@ -49,11 +49,11 @@ class PostsControllerTest {
                         .status(Publication.Status.FAILURE)
                         .publisher("twitter")
                         .build()))
-                .build());
+                .build()));
 
-        Post result = postsController.postNext();
+        List<Post> result = postsController.postNext();
 
-        assertThat(result).isEqualTo(Post.builder()
+        assertThat(result).isEqualTo(List.of(Post.builder()
                 .id("2")
                 .name("My Post 2")
                 .description("My second post")
@@ -64,7 +64,7 @@ class PostsControllerTest {
                         .status(Publication.Status.FAILURE)
                         .publisher("twitter")
                         .build()))
-                .build());
+                .build()));
     }
 
 }
