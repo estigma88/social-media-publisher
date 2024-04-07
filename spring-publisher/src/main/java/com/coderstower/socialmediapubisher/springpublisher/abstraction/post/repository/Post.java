@@ -22,6 +22,7 @@ public class Post {
     private final URL url;
     private final LocalDateTime publishedDate;
     private final List<Publication> publications;
+    private final String group;
 
     public String basicFormat() {
         return String.format(BASIC_FORMAT,
@@ -52,6 +53,7 @@ public class Post {
                 .tags(tags)
                 .url(url)
                 .publications(publications)
+                .group(group)
                 .publishedDate(publishedDate).build();
     }
 
@@ -63,6 +65,7 @@ public class Post {
                 .tags(tags)
                 .url(url)
                 .publications(publications)
+                .group(group)
                 .publishedDate(publishedDate).build();
     }
 }

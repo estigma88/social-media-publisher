@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -31,8 +32,8 @@ public class PostsController {
     }
 
     @RequestMapping(path = "/posts/next", method = RequestMethod.POST)
-    public Post postNext() {
-        Post post = postPublisher.publishNext();
+    public List<Post> postNext() {
+        List<Post> post = postPublisher.publishNext();
 
         log.info("Published Post: {}", post);
 

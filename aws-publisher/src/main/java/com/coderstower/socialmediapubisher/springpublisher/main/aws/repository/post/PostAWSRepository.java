@@ -5,7 +5,9 @@ import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.repo
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class PostAWSRepository implements PostRepository {
@@ -13,6 +15,13 @@ public class PostAWSRepository implements PostRepository {
 
     public PostAWSRepository(PostDynamoRepository postDynamoRepository) {
         this.postDynamoRepository = postDynamoRepository;
+    }
+
+    @Override
+    public List<Post> findAll() {
+        return StreamSupport.stream(postDynamoRepository.findAll().spliterator(), false)
+                .map(this::convert)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -35,6 +44,7 @@ public class PostAWSRepository implements PostRepository {
                 .name(post.getName())
                 .tags(post.getTags())
                 .url(post.getUrl())
+                .group(post.getGroup())
                 .build();
     }
 
@@ -45,6 +55,7 @@ public class PostAWSRepository implements PostRepository {
                 .publishedDate(postDynamo.getPublishedDate())
                 .name(postDynamo.getName())
                 .tags(postDynamo.getTags())
+                .group(postDynamo.getGroup())
                 .url(postDynamo.getUrl()).build();
     }
 }
