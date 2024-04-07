@@ -43,26 +43,17 @@ class PostAWSRepositoryTest {
                 .publishedDate(LocalDateTime.parse("2013-09-17T18:47:52"))
                 .build()));
 
-        List<Post> post = postAWSRepository.findAll();
+        Optional<Post> post = postAWSRepository.getNextToPublish("group1");
 
-        assertThat(post).isEqualTo(List.of(Post.builder()
-                        .id("2")
-                        .name("My Post 2")
-                        .description("My second post")
-                        .tags(List.of("tag1", "tag2"))
-                        .group("group1")
-                        .url(URI.create("https://coderstower.com/2020/01/13/open-close-principle-by-example/").toURL())
-                        .publishedDate(LocalDateTime.parse("2012-09-17T18:47:52"))
-                        .build(),
-                Post.builder()
-                        .id("1")
-                        .name("My Post 1")
-                        .description("My first post")
-                        .tags(List.of("tag1", "tag2"))
-                        .group("group1")
-                        .url(URI.create("https://coderstower.com/2020/02/18/unit-tests-vs-integration-tests/").toURL())
-                        .publishedDate(LocalDateTime.parse("2013-09-17T18:47:52"))
-                        .build()));
+        assertThat(post).isEqualTo(Optional.of(Post.builder()
+                .id("2")
+                .name("My Post 2")
+                .description("My second post")
+                .tags(List.of("tag1", "tag2"))
+                .url(URI.create("https://coderstower.com/2020/01/13/open-close-principle-by-example/").toURL())
+                .publishedDate(LocalDateTime.parse("2012-09-17T18:47:52"))
+                .group("group1")
+                .build()));
     }
 
     @Test

@@ -83,7 +83,7 @@ class MockSocialMediaCredentialsHandlingTests {
     void publish_credentialsExpired_unauthorizedException() throws Exception {
         mockingTwitter();
 
-        mvc.perform(post("/posts/next")
+        mvc.perform(post("/posts/group1/next")
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized())
