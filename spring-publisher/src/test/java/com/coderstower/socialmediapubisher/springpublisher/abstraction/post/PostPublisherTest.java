@@ -37,7 +37,7 @@ class PostPublisherTest {
     @BeforeEach
     public void before() {
         this.postPublisher = new PostPublisher(List.of(socialMediaPublisher1, socialMediaPublisher2), postRepository, Clock
-                .fixed(ZonedDateTime.of(2020, 3, 3, 5, 6, 8, 1, ZoneId.of("UTC")).toInstant(), ZoneId.of("UTC")));
+                .fixed(ZonedDateTime.of(2020, 3, 3, 5, 6, 8, 1, ZoneId.of("UTC")).toInstant(), ZoneId.of("UTC")), List.of("group1"));
     }
 
     @Test
@@ -56,7 +56,7 @@ class PostPublisherTest {
 
     @Test
     public void publishNext_noPost_exception() {
-        when(postRepository.getNextToPublish()).thenReturn(Optional.empty());
+        when(postRepository.findAll()).thenReturn(List.of());
         when(socialMediaPublisher1.ping()).thenReturn(Acknowledge.builder()
                 .status(Acknowledge.Status.SUCCESS).build());
         when(socialMediaPublisher2.ping()).thenReturn(Acknowledge.builder()
@@ -76,6 +76,7 @@ class PostPublisherTest {
                 .publishedDate(LocalDateTime.of(2020, 2, 3, 5, 6, 8, 1))
                 .tags(List.of("tag1", "tag2"))
                 .url(URI.create("https://myblog/post").toURL())
+                .group("group1")
                 .build();
 
         Post expectedPost = Post.builder()
@@ -85,6 +86,7 @@ class PostPublisherTest {
                 .publishedDate(LocalDateTime.of(2020, 2, 3, 5, 6, 8, 1))
                 .tags(List.of("tag1", "tag2"))
                 .url(URI.create("https://myblog/post").toURL())
+                .group("group1")
                 .publications(List
                         .of(Publication.builder()
                                         .id("id")
@@ -99,7 +101,7 @@ class PostPublisherTest {
                                         .build()))
                 .build();
 
-        when(postRepository.getNextToPublish()).thenReturn(Optional.of(post));
+        when(postRepository.findAll()).thenReturn(List.of(post));
         when(socialMediaPublisher1.ping()).thenReturn(Acknowledge.builder()
                 .status(Acknowledge.Status.SUCCESS).build());
         when(socialMediaPublisher1.publish(post)).thenReturn(Publication.builder()
@@ -130,6 +132,7 @@ class PostPublisherTest {
                 .publishedDate(LocalDateTime.of(2020, 2, 3, 5, 6, 8, 1))
                 .tags(List.of("tag1", "tag2"))
                 .url(URI.create("https://myblog/post").toURL())
+                .group("group1")
                 .build();
 
         Post postUpdated = Post.builder()
@@ -139,6 +142,7 @@ class PostPublisherTest {
                 .publishedDate(LocalDateTime.of(2020, 3, 3, 5, 6, 8, 1))
                 .tags(List.of("tag1", "tag2"))
                 .url(URI.create("https://myblog/post").toURL())
+                .group("group1")
                 .build();
 
         Post expectedPost = Post.builder()
@@ -148,6 +152,7 @@ class PostPublisherTest {
                 .publishedDate(LocalDateTime.of(2020, 3, 3, 5, 6, 8, 1))
                 .tags(List.of("tag1", "tag2"))
                 .url(URI.create("https://myblog/post").toURL())
+                .group("group1")
                 .publications(List
                         .of(Publication.builder()
                                         .id("id")
@@ -163,7 +168,7 @@ class PostPublisherTest {
                                         .build()))
                 .build();
 
-        when(postRepository.getNextToPublish()).thenReturn(Optional.of(post));
+        when(postRepository.findAll()).thenReturn(List.of(post));
         when(socialMediaPublisher1.ping()).thenReturn(Acknowledge.builder()
                 .status(Acknowledge.Status.SUCCESS).build());
         when(socialMediaPublisher1.publish(post)).thenReturn(Publication.builder()
@@ -182,9 +187,9 @@ class PostPublisherTest {
                 .build());
         when(postRepository.update(postUpdated)).thenReturn(postUpdated);
 
-        Post publishedPost = postPublisher.publishNext();
+        List<Post> publishedPost = postPublisher.publishNext();
 
-        assertThat(publishedPost).isEqualTo(expectedPost);
+        assertThat(publishedPost).isEqualTo(List.of(expectedPost));
     }
 
 }
