@@ -45,7 +45,7 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>DynamoDBLocal</artifactId>
-            <version>[1.12,2.0)</version>
+            <version>1.13.0</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
