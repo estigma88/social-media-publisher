@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriTemplate;
 
@@ -64,29 +65,18 @@ public class LinkedInPublisher implements SocialMediaPublisher {
             Profile profile = getProfile(credentials);
 
             LinkedInShare linkedInShare = LinkedInShare.builder()
-                    .author("urn:li:person:" + profile.getId())
+                    .author("urn:li:person:" + profile.getSub())
+                    .commentary(post.getDescription())
+                    .distribution(Distribution.builder().feedDistribution("MAIN_FEED").build())
                     .lifecycleState("PUBLISHED")
-                    .specificContent(SpecificContent.builder()
-                            .shareContent(ShareContent.builder()
-                                    .shareCommentary(Text.builder()
-                                            .text(post.basicFormatWithoutURL())
-                                            .build())
-                                    .shareMediaCategory("ARTICLE")
-                                    .media(Media.builder()
-                                            .description(Text.builder()
-                                                    .text(post.getDescription())
-                                                    .build())
-                                            .title(Text.builder()
-                                                    .text(post.getName())
-                                                    .build())
-                                            .status("READY")
-                                            .originalUrl(post.getUrl().toString())
-                                            .build())
+                    .content(Content.builder()
+                            .article(ArticleContent.builder()
+                                    .description(post.getDescription())
+                                    .title(post.getName())
+                                    .source(post.getUrl().toString())
                                     .build())
                             .build())
-                    .visibility(Visibility.builder()
-                            .memberNetworkVisibility("PUBLIC")
-                            .build())
+                    .visibility("PUBLIC")
                     .build();
 
             String shareId = publish(linkedInShare, credentials);
@@ -105,6 +95,15 @@ public class LinkedInPublisher implements SocialMediaPublisher {
                         .publishedDate(LocalDateTime.now(clock))
                         .build();
             }
+        } catch (HttpClientErrorException e) {
+            log.error("Error publishing to " + name + ", response body: " + e.getResponseBodyAsString(), e);
+
+            return Publication.builder()
+                    .status(Publication.Status.FAILURE)
+                    .publisher(name)
+                    .publishedDate(LocalDateTime.now(clock))
+                    .build();
+
         } catch (Exception e) {
             log.error("Error publishing to " + name, e);
 
@@ -120,11 +119,12 @@ public class LinkedInPublisher implements SocialMediaPublisher {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.add("X-Restli-Protocol-Version", "2.0.0");
+        httpHeaders.add("LinkedIn-Version", "202304");
         httpHeaders.setBearerAuth(credentials.getAccessToken());
 
         HttpEntity<LinkedInShare> requestEntity = new HttpEntity<>(linkedInShare, httpHeaders);
 
-        ResponseEntity<Void> response = restTemplate.exchange("https://api.linkedin.com/v2/ugcPosts", HttpMethod.POST, requestEntity, Void.class);
+        ResponseEntity<Void> response = restTemplate.exchange("https://api.linkedin.com/rest/posts", HttpMethod.POST, requestEntity, Void.class);
 
         if (!response.getStatusCode().is2xxSuccessful()) {
             throw new IllegalStateException("Problem trying to share a linkedin post: " + response.getStatusCode());
@@ -137,11 +137,12 @@ public class LinkedInPublisher implements SocialMediaPublisher {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.add("X-Restli-Protocol-Version", "2.0.0");
+        httpHeaders.add("LinkedIn-Version", "202304");
         httpHeaders.setBearerAuth(credentials.getAccessToken());
 
         HttpEntity<Void> requestEntity = new HttpEntity<>(httpHeaders);
 
-        ResponseEntity<Profile> response = restTemplate.exchange("https://api.linkedin.com/v2/me", HttpMethod.GET, requestEntity, Profile.class);
+        ResponseEntity<Profile> response = restTemplate.exchange("https://api.linkedin.com/v2/userinfo", HttpMethod.GET, requestEntity, Profile.class);
 
         if (!response.getStatusCode().is2xxSuccessful()) {
             throw new IllegalStateException("Problem trying to get the profile: " + response.getStatusCode());

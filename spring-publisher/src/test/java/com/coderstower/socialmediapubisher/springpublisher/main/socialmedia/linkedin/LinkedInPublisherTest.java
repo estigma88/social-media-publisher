@@ -121,14 +121,14 @@ class LinkedInPublisherTest {
 
         when(restTemplate.exchange("https://api.linkedin.com/v2/me", HttpMethod.GET, requestEntityProfile, Profile.class))
                 .thenReturn(ResponseEntity.ok(Profile.builder()
-                        .id("memberid")
+                        .sub("memberid")
                         .build()));
 
         LinkedInShare linkedInShare = LinkedInShare.builder()
                 .author("urn:li:person:memberid")
                 .lifecycleState("PUBLISHED")
-                .specificContent(SpecificContent.builder()
-                        .shareContent(ShareContent.builder()
+                .content(Content.builder()
+                        .article(ArticleContent.builder()
                                 .shareCommentary(Text.builder()
                                         .text("My second post\n\n#tag1 #tag2")
                                         .build())
@@ -186,14 +186,14 @@ class LinkedInPublisherTest {
 
         when(restTemplate.exchange("https://api.linkedin.com/v2/me", HttpMethod.GET, requestEntityProfile, Profile.class))
                 .thenReturn(ResponseEntity.ok(Profile.builder()
-                        .id("memberid")
+                        .sub("memberid")
                         .build()));
 
         LinkedInShare linkedInShare = LinkedInShare.builder()
                 .author("urn:li:person:memberid")
                 .lifecycleState("PUBLISHED")
-                .specificContent(SpecificContent.builder()
-                        .shareContent(ShareContent.builder()
+                .content(Content.builder()
+                        .article(ArticleContent.builder()
                                 .shareCommentary(Text.builder()
                                         .text("My second post\n\n#tag1 #tag2")
                                         .build())
@@ -251,14 +251,14 @@ class LinkedInPublisherTest {
 
         when(restTemplate.exchange("https://api.linkedin.com/v2/me", HttpMethod.GET, requestEntityProfile, Profile.class))
                 .thenReturn(ResponseEntity.ok(Profile.builder()
-                        .id("memberid")
+                        .sub("memberid")
                         .build()));
 
         LinkedInShare linkedInShare = LinkedInShare.builder()
                 .author("urn:li:person:memberid")
                 .lifecycleState("PUBLISHED")
-                .specificContent(SpecificContent.builder()
-                        .shareContent(ShareContent.builder()
+                .content(Content.builder()
+                        .article(ArticleContent.builder()
                                 .shareCommentary(Text.builder()
                                         .text("My second post\n\n#tag1 #tag2")
                                         .build())

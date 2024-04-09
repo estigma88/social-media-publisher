@@ -14,8 +14,8 @@ import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
 import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.linkedin.LinkedInShare;
 import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.linkedin.Media;
 import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.linkedin.Profile;
-import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.linkedin.ShareContent;
-import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.linkedin.SpecificContent;
+import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.linkedin.ArticleContent;
+import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.linkedin.Content;
 import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.linkedin.Text;
 import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.linkedin.Visibility;
 import org.junit.jupiter.api.Test;
@@ -96,14 +96,14 @@ class MockSocialMediaSuccessfulTests {
 
         when(restTemplate.exchange("https://api.linkedin.com/v2/me", HttpMethod.GET, requestMe, Profile.class))
                 .thenReturn(ResponseEntity.ok(Profile.builder()
-                        .id("memberid")
+                        .sub("memberid")
                         .build()));
 
         LinkedInShare linkedInShare = LinkedInShare.builder()
                 .author("urn:li:person:memberid")
                 .lifecycleState("PUBLISHED")
-                .specificContent(SpecificContent.builder()
-                        .shareContent(ShareContent.builder()
+                .content(Content.builder()
+                        .article(ArticleContent.builder()
                                 .shareCommentary(Text.builder()
                                         .text("My second post\n\n#tag1 #tag2")
                                         .build())
