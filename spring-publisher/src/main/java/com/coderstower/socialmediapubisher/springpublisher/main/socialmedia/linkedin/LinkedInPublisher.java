@@ -66,7 +66,7 @@ public class LinkedInPublisher implements SocialMediaPublisher {
 
             LinkedInShare linkedInShare = LinkedInShare.builder()
                     .author("urn:li:person:" + profile.getSub())
-                    .commentary(post.getDescription())
+                    .commentary(post.basicFormatWithoutURL())
                     .distribution(Distribution.builder().feedDistribution("MAIN_FEED").build())
                     .lifecycleState("PUBLISHED")
                     .content(Content.builder()
