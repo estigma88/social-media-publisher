@@ -3,7 +3,10 @@ package com.coderstower.socialmediapubisher.springpublisher.main.aws.repository.
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.repository.OAuth2Credentials;
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.security.repository.OAuth2CredentialsRepository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class OAuth2CredentialAWSRepository implements OAuth2CredentialsRepository {
     private final OAuth2CredentialDynamoRepository oauth2CredentialDynamoRepository;
@@ -27,11 +30,19 @@ public class OAuth2CredentialAWSRepository implements OAuth2CredentialsRepositor
         return oauth2CredentialDynamoRepository.findById(id).map(this::convert);
     }
 
+    @Override
+    public List<OAuth2Credentials> findAll() {
+        return StreamSupport.stream(oauth2CredentialDynamoRepository.findAll().spliterator(), false)
+                .map(this::convert)
+                .collect(Collectors.toList());
+    }
+
     private OAuth2CredentialDynamo convert(OAuth2Credentials oAuth2Credentials) {
         return OAuth2CredentialDynamo.builder()
                 .accessToken(oAuth2Credentials.getAccessToken())
                 .id(oAuth2Credentials.getId())
                 .expirationDate(oAuth2Credentials.getExpirationDate())
+                .allowedGroups(oAuth2Credentials.getAllowedGroups())
                 .build();
     }
 
@@ -40,6 +51,7 @@ public class OAuth2CredentialAWSRepository implements OAuth2CredentialsRepositor
                 .accessToken(oauth2CredentialDynamo.getAccessToken())
                 .id(oauth2CredentialDynamo.getId())
                 .expirationDate(oauth2CredentialDynamo.getExpirationDate())
+                .allowedGroups(oauth2CredentialDynamo.getAllowedGroups())
                 .build();
     }
 }

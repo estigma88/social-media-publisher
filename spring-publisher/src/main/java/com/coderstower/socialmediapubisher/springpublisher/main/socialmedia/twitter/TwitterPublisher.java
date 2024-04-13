@@ -72,7 +72,7 @@ public class TwitterPublisher implements SocialMediaPublisher {
     }
 
     @Override
-    public Publication publish(Post post) {
+    public List<Publication> publish(Post post) {
         OAuth1Credentials credentials = oauth1CredentialsRepository.getCredentials(name)
                 .orElseThrow(() -> new IllegalArgumentException("The credentials for " + name + " doesn't exist"));
 
@@ -84,27 +84,27 @@ public class TwitterPublisher implements SocialMediaPublisher {
             Status statuses = twitter.updateStatus(post.basicFormat());
 
             if (Objects.nonNull(statuses)) {
-                return Publication.builder()
+                return List.of(Publication.builder()
                         .id(String.valueOf(statuses.getId()))
                         .status(Publication.Status.SUCCESS)
                         .publisher(name)
                         .publishedDate(LocalDateTime.now(clock))
-                        .build();
+                        .build());
             } else {
-                return Publication.builder()
+                return List.of(Publication.builder()
                         .status(Publication.Status.FAILURE)
                         .publisher(name)
                         .publishedDate(LocalDateTime.now(clock))
-                        .build();
+                        .build());
             }
         } catch (TwitterException e) {
             log.error("Error publishing to " + name, e);
 
-            return Publication.builder()
+            return List.of(Publication.builder()
                     .status(Publication.Status.FAILURE)
                     .publisher(name)
                     .publishedDate(LocalDateTime.now(clock))
-                    .build();
+                    .build());
         }
     }
 

@@ -2,8 +2,10 @@ package com.coderstower.socialmediapubisher.springpublisher.abstraction.post.soc
 
 import com.coderstower.socialmediapubisher.springpublisher.abstraction.post.repository.Post;
 
+import java.util.List;
+
 public interface SocialMediaPublisher {
     String getName();
     Acknowledge ping();
-    Publication publish(Post post);
+    List<Publication> publish(Post post);
 }
