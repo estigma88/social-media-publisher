@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class LinkedInPublisher implements SocialMediaPublisher {
@@ -65,7 +66,11 @@ public class LinkedInPublisher implements SocialMediaPublisher {
 
     @Override
     public List<Publication> publish(Post post) {
-        List<OAuth2Credentials> credentials = oauth2CredentialsRepository.findAll();
+        List<OAuth2Credentials> credentials = oauth2CredentialsRepository.findAll()
+                .stream()
+                .filter(oAuth2Credentials -> oAuth2Credentials.getAllowedGroups().contains(post.getGroup()))
+                .collect(Collectors.toList());
+
         List<Publication> publications = new ArrayList<>();
 
         for (OAuth2Credentials credential : credentials) {
