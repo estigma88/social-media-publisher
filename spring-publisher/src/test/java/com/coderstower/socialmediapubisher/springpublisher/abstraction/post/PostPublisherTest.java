@@ -48,7 +48,7 @@ class PostPublisherTest {
                 .status(Acknowledge.Status.FAILURE).build());
         when(socialMediaPublisher2.getName()).thenReturn("LINKEDIN");
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> postPublisher.publishNext());
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> postPublisher.publishNext("group1"));
 
         assertThat(exception.getMessage()).isEqualTo("Ping to LINKEDIN failed: " + Acknowledge.builder()
                 .status(Acknowledge.Status.FAILURE).build());
@@ -56,13 +56,13 @@ class PostPublisherTest {
 
     @Test
     public void publishNext_noPost_exception() {
-        when(postRepository.getNextToPublish()).thenReturn(Optional.empty());
+        when(postRepository.getNextToPublish("group1")).thenReturn(Optional.empty());
         when(socialMediaPublisher1.ping()).thenReturn(Acknowledge.builder()
                 .status(Acknowledge.Status.SUCCESS).build());
         when(socialMediaPublisher2.ping()).thenReturn(Acknowledge.builder()
                 .status(Acknowledge.Status.SUCCESS).build());
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> postPublisher.publishNext());
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> postPublisher.publishNext("group1"));
 
         assertThat(exception.getMessage()).isEqualTo("There is not next post to publish");
     }
@@ -76,6 +76,7 @@ class PostPublisherTest {
                 .publishedDate(LocalDateTime.of(2020, 2, 3, 5, 6, 8, 1))
                 .tags(List.of("tag1", "tag2"))
                 .url(URI.create("https://myblog/post").toURL())
+                .group("group1")
                 .build();
 
         Post expectedPost = Post.builder()
@@ -97,9 +98,10 @@ class PostPublisherTest {
                                         .status(Publication.Status.FAILURE)
                                         .publisher("LINKEDIN")
                                         .build()))
+                .group("group1")
                 .build();
 
-        when(postRepository.getNextToPublish()).thenReturn(Optional.of(post));
+        when(postRepository.getNextToPublish("group1")).thenReturn(Optional.of(post));
         when(socialMediaPublisher1.ping()).thenReturn(Acknowledge.builder()
                 .status(Acknowledge.Status.SUCCESS).build());
         when(socialMediaPublisher1.publish(post)).thenReturn(Publication.builder()
@@ -116,7 +118,7 @@ class PostPublisherTest {
                 .publisher("LINKEDIN")
                 .build());
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> postPublisher.publishNext());
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> postPublisher.publishNext("group1"));
 
         assertThat(exception.getMessage()).isEqualTo("Error publishing the post: " + expectedPost);
     }
@@ -130,6 +132,7 @@ class PostPublisherTest {
                 .publishedDate(LocalDateTime.of(2020, 2, 3, 5, 6, 8, 1))
                 .tags(List.of("tag1", "tag2"))
                 .url(URI.create("https://myblog/post").toURL())
+                .group("group1")
                 .build();
 
         Post postUpdated = Post.builder()
@@ -139,6 +142,7 @@ class PostPublisherTest {
                 .publishedDate(LocalDateTime.of(2020, 3, 3, 5, 6, 8, 1))
                 .tags(List.of("tag1", "tag2"))
                 .url(URI.create("https://myblog/post").toURL())
+                .group("group1")
                 .build();
 
         Post expectedPost = Post.builder()
@@ -148,6 +152,7 @@ class PostPublisherTest {
                 .publishedDate(LocalDateTime.of(2020, 3, 3, 5, 6, 8, 1))
                 .tags(List.of("tag1", "tag2"))
                 .url(URI.create("https://myblog/post").toURL())
+                .group("group1")
                 .publications(List
                         .of(Publication.builder()
                                         .id("id")
@@ -163,7 +168,7 @@ class PostPublisherTest {
                                         .build()))
                 .build();
 
-        when(postRepository.getNextToPublish()).thenReturn(Optional.of(post));
+        when(postRepository.getNextToPublish("group1")).thenReturn(Optional.of(post));
         when(socialMediaPublisher1.ping()).thenReturn(Acknowledge.builder()
                 .status(Acknowledge.Status.SUCCESS).build());
         when(socialMediaPublisher1.publish(post)).thenReturn(Publication.builder()
@@ -182,7 +187,7 @@ class PostPublisherTest {
                 .build());
         when(postRepository.update(postUpdated)).thenReturn(postUpdated);
 
-        Post publishedPost = postPublisher.publishNext();
+        Post publishedPost = postPublisher.publishNext("group1");
 
         assertThat(publishedPost).isEqualTo(expectedPost);
     }

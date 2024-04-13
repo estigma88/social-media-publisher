@@ -8,9 +8,8 @@ import java.util.List;
 
 @Data
 @Builder
-public class ShareContent {
-    private final Text shareCommentary;
-    private final String shareMediaCategory;
-    @Singular("media")
-    private final List<Media> media;
+public class ArticleContent {
+    private final String title;
+    private final String description;
+    private final String source;
 }

@@ -22,10 +22,10 @@ public class PostPublisher {
         this.clock = clock;
     }
 
-    public Post publishNext() {
+    public Post publishNext(String group) {
         ping(socialMediaPublishers);
 
-        Post nextPost = postRepository.getNextToPublish()
+        Post nextPost = postRepository.getNextToPublish(group)
                 .orElseThrow(() -> new IllegalStateException("There is not next post to publish"));
 
         List<Publication> publishedPosts = publish(socialMediaPublishers, nextPost);

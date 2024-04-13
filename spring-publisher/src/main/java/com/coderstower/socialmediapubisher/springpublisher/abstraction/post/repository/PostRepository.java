@@ -3,6 +3,6 @@ package com.coderstower.socialmediapubisher.springpublisher.abstraction.post.rep
 import java.util.Optional;
 
 public interface PostRepository {
-    Optional<Post> getNextToPublish();
+    Optional<Post> getNextToPublish(String group);
     Post update(Post post);
 }

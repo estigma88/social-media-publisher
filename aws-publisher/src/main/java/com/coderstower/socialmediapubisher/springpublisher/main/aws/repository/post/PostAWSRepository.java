@@ -16,8 +16,9 @@ public class PostAWSRepository implements PostRepository {
     }
 
     @Override
-    public Optional<Post> getNextToPublish() {
+    public Optional<Post> getNextToPublish(String group) {
         return StreamSupport.stream(postDynamoRepository.findAll().spliterator(), false)
+                .filter(postDynamo -> group.equals(postDynamo.getGroup()))
                 .min(Comparator.comparing(PostDynamo::getPublishedDate))
                 .map(this::convert);
     }
@@ -35,6 +36,7 @@ public class PostAWSRepository implements PostRepository {
                 .name(post.getName())
                 .tags(post.getTags())
                 .url(post.getUrl())
+                .group(post.getGroup())
                 .build();
     }
 
@@ -45,6 +47,7 @@ public class PostAWSRepository implements PostRepository {
                 .publishedDate(postDynamo.getPublishedDate())
                 .name(postDynamo.getName())
                 .tags(postDynamo.getTags())
+                .group(postDynamo.getGroup())
                 .url(postDynamo.getUrl()).build();
     }
 }

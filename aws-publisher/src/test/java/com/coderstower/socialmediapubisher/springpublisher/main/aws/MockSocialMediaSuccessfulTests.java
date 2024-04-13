@@ -11,13 +11,7 @@ import com.amazonaws.services.dynamodbv2.model.KeyType;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
 import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
-import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.linkedin.LinkedInShare;
-import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.linkedin.Media;
-import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.linkedin.Profile;
-import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.linkedin.ShareContent;
-import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.linkedin.SpecificContent;
-import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.linkedin.Text;
-import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.linkedin.Visibility;
+import com.coderstower.socialmediapubisher.springpublisher.main.socialmedia.linkedin.*;
 import org.junit.jupiter.api.Test;
 import org.junitpioneer.jupiter.SetSystemProperty;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +72,7 @@ class MockSocialMediaSuccessfulTests {
         mockingTwitter();
         mockingLinkedIn();
 
-        mvc.perform(post("/posts/next")
+        mvc.perform(post("/posts/group1/next")
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -90,44 +84,35 @@ class MockSocialMediaSuccessfulTests {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.add("X-Restli-Protocol-Version", "2.0.0");
+        httpHeaders.add("LinkedIn-Version", "202304");
         httpHeaders.setBearerAuth("access123");
 
         HttpEntity<Void> requestMe = new HttpEntity<>(httpHeaders);
 
-        when(restTemplate.exchange("https://api.linkedin.com/v2/me", HttpMethod.GET, requestMe, Profile.class))
+        when(restTemplate.exchange("https://api.linkedin.com/v2/userinfo", HttpMethod.GET, requestMe, Profile.class))
                 .thenReturn(ResponseEntity.ok(Profile.builder()
-                        .id("memberid")
+                        .sub("memberid")
                         .build()));
 
         LinkedInShare linkedInShare = LinkedInShare.builder()
                 .author("urn:li:person:memberid")
                 .lifecycleState("PUBLISHED")
-                .specificContent(SpecificContent.builder()
-                        .shareContent(ShareContent.builder()
-                                .shareCommentary(Text.builder()
-                                        .text("My second post\n\n#tag1 #tag2")
-                                        .build())
-                                .shareMediaCategory("ARTICLE")
-                                .media(Media.builder()
-                                        .description(Text.builder()
-                                                .text("My second post")
-                                                .build())
-                                        .title(Text.builder()
-                                                .text("My Post 2")
-                                                .build())
-                                        .status("READY")
-                                        .originalUrl("https://coderstower.com/2020/01/13/open-close-principle-by-example/")
-                                        .build())
+                .commentary("My second post\n\n#tag1 #tag2")
+                .distribution(Distribution.builder().feedDistribution("MAIN_FEED").build())
+                .lifecycleState("PUBLISHED")
+                .content(Content.builder()
+                        .article(ArticleContent.builder()
+                                .description("My second post")
+                                .title("My Post 2")
+                                .source("https://coderstower.com/2020/01/13/open-close-principle-by-example/")
                                 .build())
                         .build())
-                .visibility(Visibility.builder()
-                        .memberNetworkVisibility("PUBLIC")
-                        .build())
+                .visibility("PUBLIC")
                 .build();
 
         HttpEntity<LinkedInShare> requestShare = new HttpEntity<>(linkedInShare, httpHeaders);
 
-        when(restTemplate.exchange("https://api.linkedin.com/v2/ugcPosts", HttpMethod.POST, requestShare, Void.class))
+        when(restTemplate.exchange("https://api.linkedin.com/rest/posts", HttpMethod.POST, requestShare, Void.class))
                 .thenReturn(ResponseEntity.ok()
                         .header("X-RestLi-Id", "shareid")
                         .build());
@@ -183,6 +168,7 @@ class MockSocialMediaSuccessfulTests {
             post1.addItemEntry("tags", new AttributeValue().withL(new AttributeValue("tag1"), new AttributeValue("tag2")));
             post1.addItemEntry("url", new AttributeValue("https://coderstower.com/2020/02/18/unit-tests-vs-integration-tests/"));
             post1.addItemEntry("publishedDate", new AttributeValue("2013-09-17T18:47:52"));
+            post1.addItemEntry("group", new AttributeValue("group1"));
 
             ddb.putItem(post1);
 
@@ -194,6 +180,7 @@ class MockSocialMediaSuccessfulTests {
             post2.addItemEntry("tags", new AttributeValue().withL(new AttributeValue("tag1"), new AttributeValue("tag2")));
             post2.addItemEntry("url", new AttributeValue("https://coderstower.com/2020/01/13/open-close-principle-by-example/"));
             post2.addItemEntry("publishedDate", new AttributeValue("2012-09-17T18:47:52"));
+            post2.addItemEntry("group", new AttributeValue("group1"));
 
             ddb.putItem(post2);
 

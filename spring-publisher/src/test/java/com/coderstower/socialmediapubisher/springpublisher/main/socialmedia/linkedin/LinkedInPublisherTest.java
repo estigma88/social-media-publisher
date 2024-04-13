@@ -121,33 +121,23 @@ class LinkedInPublisherTest {
 
         when(restTemplate.exchange("https://api.linkedin.com/v2/me", HttpMethod.GET, requestEntityProfile, Profile.class))
                 .thenReturn(ResponseEntity.ok(Profile.builder()
-                        .id("memberid")
+                        .sub("memberid")
                         .build()));
 
         LinkedInShare linkedInShare = LinkedInShare.builder()
                 .author("urn:li:person:memberid")
                 .lifecycleState("PUBLISHED")
-                .specificContent(SpecificContent.builder()
-                        .shareContent(ShareContent.builder()
-                                .shareCommentary(Text.builder()
-                                        .text("My second post\n\n#tag1 #tag2")
-                                        .build())
-                                .shareMediaCategory("ARTICLE")
-                                .media(Media.builder()
-                                        .description(Text.builder()
-                                                .text("My second post")
-                                                .build())
-                                        .title(Text.builder()
-                                                .text("My Post 2")
-                                                .build())
-                                        .status("READY")
-                                        .originalUrl("https://coderstower.com/2020/01/13/open-close-principle-by-example/")
-                                        .build())
+                .commentary("commentary")
+                .distribution(Distribution.builder().feedDistribution("MAIN_FEED").build())
+                .lifecycleState("PUBLISHED")
+                .content(Content.builder()
+                        .article(ArticleContent.builder()
+                                .description("My second post\n\n#tag1 #tag2")
+                                .title("My second post")
+                                .source("https://coderstower.com/2020/01/13/open-close-principle-by-example/")
                                 .build())
                         .build())
-                .visibility(Visibility.builder()
-                        .memberNetworkVisibility("PUBLIC")
-                        .build())
+                .visibility("PUBLIC")
                 .build();
 
         HttpEntity<LinkedInShare> requestShare = new HttpEntity<>(linkedInShare, httpHeaders);
@@ -186,33 +176,23 @@ class LinkedInPublisherTest {
 
         when(restTemplate.exchange("https://api.linkedin.com/v2/me", HttpMethod.GET, requestEntityProfile, Profile.class))
                 .thenReturn(ResponseEntity.ok(Profile.builder()
-                        .id("memberid")
+                        .sub("memberid")
                         .build()));
 
         LinkedInShare linkedInShare = LinkedInShare.builder()
                 .author("urn:li:person:memberid")
                 .lifecycleState("PUBLISHED")
-                .specificContent(SpecificContent.builder()
-                        .shareContent(ShareContent.builder()
-                                .shareCommentary(Text.builder()
-                                        .text("My second post\n\n#tag1 #tag2")
-                                        .build())
-                                .shareMediaCategory("ARTICLE")
-                                .media(Media.builder()
-                                        .description(Text.builder()
-                                                .text("My second post")
-                                                .build())
-                                        .title(Text.builder()
-                                                .text("My Post 2")
-                                                .build())
-                                        .status("READY")
-                                        .originalUrl("https://coderstower.com/2020/01/13/open-close-principle-by-example/")
-                                        .build())
+                .commentary("commentary")
+                .distribution(Distribution.builder().feedDistribution("MAIN_FEED").build())
+                .lifecycleState("PUBLISHED")
+                .content(Content.builder()
+                        .article(ArticleContent.builder()
+                                .description("My second post\n\n#tag1 #tag2")
+                                .title("My second post")
+                                .source("https://coderstower.com/2020/01/13/open-close-principle-by-example/")
                                 .build())
                         .build())
-                .visibility(Visibility.builder()
-                        .memberNetworkVisibility("PUBLIC")
-                        .build())
+                .visibility("PUBLIC")
                 .build();
 
         HttpEntity<LinkedInShare> requestShare = new HttpEntity<>(linkedInShare, httpHeaders);
@@ -241,6 +221,7 @@ class LinkedInPublisherTest {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.add("X-Restli-Protocol-Version", "2.0.0");
+        httpHeaders.add("LinkedIn-Version", "202304");
         httpHeaders.setBearerAuth("accessToken");
 
         when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(OAuth2Credentials.builder()
@@ -249,40 +230,30 @@ class LinkedInPublisherTest {
 
         HttpEntity<Void> requestEntityProfile = new HttpEntity<>(httpHeaders);
 
-        when(restTemplate.exchange("https://api.linkedin.com/v2/me", HttpMethod.GET, requestEntityProfile, Profile.class))
+        when(restTemplate.exchange("https://api.linkedin.com/v2/userinfo", HttpMethod.GET, requestEntityProfile, Profile.class))
                 .thenReturn(ResponseEntity.ok(Profile.builder()
-                        .id("memberid")
+                        .sub("memberid")
                         .build()));
 
         LinkedInShare linkedInShare = LinkedInShare.builder()
                 .author("urn:li:person:memberid")
                 .lifecycleState("PUBLISHED")
-                .specificContent(SpecificContent.builder()
-                        .shareContent(ShareContent.builder()
-                                .shareCommentary(Text.builder()
-                                        .text("My second post\n\n#tag1 #tag2")
-                                        .build())
-                                .shareMediaCategory("ARTICLE")
-                                .media(Media.builder()
-                                        .description(Text.builder()
-                                                .text("My second post")
-                                                .build())
-                                        .title(Text.builder()
-                                                .text("My Post 2")
-                                                .build())
-                                        .status("READY")
-                                        .originalUrl("https://coderstower.com/2020/01/13/open-close-principle-by-example/")
-                                        .build())
+                .commentary("My second post\n\n#tag1 #tag2")
+                .distribution(Distribution.builder().feedDistribution("MAIN_FEED").build())
+                .lifecycleState("PUBLISHED")
+                .content(Content.builder()
+                        .article(ArticleContent.builder()
+                                .description("My second post")
+                                .title("My Post 2")
+                                .source("https://coderstower.com/2020/01/13/open-close-principle-by-example/")
                                 .build())
                         .build())
-                .visibility(Visibility.builder()
-                        .memberNetworkVisibility("PUBLIC")
-                        .build())
+                .visibility("PUBLIC")
                 .build();
 
         HttpEntity<LinkedInShare> requestShare = new HttpEntity<>(linkedInShare, httpHeaders);
 
-        when(restTemplate.exchange("https://api.linkedin.com/v2/ugcPosts", HttpMethod.POST, requestShare, Void.class))
+        when(restTemplate.exchange("https://api.linkedin.com/rest/posts", HttpMethod.POST, requestShare, Void.class))
                 .thenReturn(ResponseEntity.ok().header("X-RestLi-Id", "shareId").build());
 
         Publication publication = linkedInPublisher.publish(Post.builder()
