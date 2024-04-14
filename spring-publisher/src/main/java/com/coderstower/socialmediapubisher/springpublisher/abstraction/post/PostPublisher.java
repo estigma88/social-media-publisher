@@ -48,7 +48,7 @@ public class PostPublisher {
 
     private List<Publication> publish(List<SocialMediaPublisher> socialMediaPublishers, Post nextPost) {
         return socialMediaPublishers.stream()
-                .map(socialMediaPublisher -> socialMediaPublisher.publish(nextPost))
+                .flatMap(socialMediaPublisher -> socialMediaPublisher.publish(nextPost).stream())
                 .collect(Collectors.toList());
     }
 
