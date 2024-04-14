@@ -87,7 +87,7 @@ class MockSocialMediaCredentialsHandlingTests {
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized())
-                .andExpect(content().string("Unauthorized. Please login again here: http://localhost:8080/oauth2/linkedin/credentials"));
+                .andExpect(content().string("Unauthorized for linkedin credential1. Please login again here: http://localhost:8080/oauth2/linkedin/credentials"));
     }
 
     @Test
@@ -154,7 +154,7 @@ class MockSocialMediaCredentialsHandlingTests {
 
             PutItemRequest oauth2Credentials = new PutItemRequest();
             oauth2Credentials.setTableName("Oauth2Credentials");
-            oauth2Credentials.addItemEntry("id", new AttributeValue("linkedin"));
+            oauth2Credentials.addItemEntry("id", new AttributeValue("credential1"));
             oauth2Credentials.addItemEntry("accessToken", new AttributeValue("access123"));
             oauth2Credentials.addItemEntry("expirationDate", new AttributeValue("2020-02-01T05:05:05"));
 

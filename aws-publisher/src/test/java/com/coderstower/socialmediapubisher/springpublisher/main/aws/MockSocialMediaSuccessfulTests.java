@@ -146,6 +146,7 @@ class MockSocialMediaSuccessfulTests {
             oauth2Credentials.setTableName("Oauth2Credentials");
             oauth2Credentials.addItemEntry("id", new AttributeValue("linkedin"));
             oauth2Credentials.addItemEntry("accessToken", new AttributeValue("access123"));
+            oauth2Credentials.addItemEntry("allowedGroups", new AttributeValue().withL(List.of(new AttributeValue("group1"))));
             oauth2Credentials.addItemEntry("expirationDate", new AttributeValue("2020-04-01T05:05:05"));
 
             ddb.putItem(oauth2Credentials);
