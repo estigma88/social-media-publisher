@@ -1,0 +1,15 @@
+# Reduce logging level to make sure the application works with SAM local
+# https://github.com/awslabs/aws-serverless-java-container/issues/134
+#logging:
+#  level:
+#    root: WARN
+
+amazon:
+  dynamodb:
+    endpoint: http://localhost:8000/
+    accesskey: key
+    secretkey: key2
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
