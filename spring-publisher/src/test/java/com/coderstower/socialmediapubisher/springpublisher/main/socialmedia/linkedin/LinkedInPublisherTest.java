@@ -51,7 +51,7 @@ class LinkedInPublisherTest {
 
     @Test
     public void ping_noCredential_exception() {
-        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.empty());
+        when(oauth2CredentialsRepository.findAll()).thenReturn(List.of());
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> linkedInPublisher.ping());
 
@@ -60,18 +60,19 @@ class LinkedInPublisherTest {
 
     @Test
     public void ping_expiredCredential_exception() {
-        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(OAuth2Credentials.builder()
+        when(oauth2CredentialsRepository.findAll()).thenReturn(List.of(OAuth2Credentials.builder()
                 .expirationDate(now.toLocalDateTime().minusMonths(1))
+                .id("credential1")
                 .build()));
 
         UnauthorizedException exception = assertThrows(UnauthorizedException.class, () -> linkedInPublisher.ping());
 
-        assertThat(exception.getMessage()).isEqualTo("Unauthorized. Please login again here: http://localhost:8080/oauth2/linkedin/credentials");
+        assertThat(exception.getMessage()).isEqualTo("Unauthorized for linkedin credential1. Please login again here: http://localhost:8080/oauth2/linkedin/credentials");
     }
 
     @Test
     public void ping_goodCredential_success() {
-        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(OAuth2Credentials.builder()
+        when(oauth2CredentialsRepository.findAll()).thenReturn(List.of(OAuth2Credentials.builder()
                 .expirationDate(now.toLocalDateTime().plusMonths(1))
                 .build()));
 
@@ -91,19 +92,22 @@ class LinkedInPublisherTest {
 
         HttpEntity<Void> requestEntityProfile = new HttpEntity<>(httpHeadersProfile);
 
-        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(OAuth2Credentials.builder()
+        when(oauth2CredentialsRepository.findAll()).thenReturn(List.of(OAuth2Credentials.builder()
                 .accessToken("accessToken")
+                .allowedGroups(List.of("group1"))
                 .build()));
         when(restTemplate.exchange("https://api.linkedin.com/v2/me", HttpMethod.GET, requestEntityProfile, Profile.class))
                 .thenReturn(ResponseEntity.notFound().build());
 
-        Publication publication = linkedInPublisher.publish(Post.builder().build());
+        List<Publication> publication = linkedInPublisher.publish(Post.builder()
+                .group("group1")
+                .build());
 
-        assertThat(publication).isEqualTo(Publication.builder()
+        assertThat(publication).isEqualTo(List.of(Publication.builder()
                 .status(Publication.Status.FAILURE)
                 .publisher("linkedin")
                 .publishedDate(now.toLocalDateTime())
-                .build());
+                .build()));
     }
 
     @Test
@@ -113,8 +117,9 @@ class LinkedInPublisherTest {
         httpHeaders.add("X-Restli-Protocol-Version", "2.0.0");
         httpHeaders.setBearerAuth("accessToken");
 
-        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(OAuth2Credentials.builder()
+        when(oauth2CredentialsRepository.findAll()).thenReturn(List.of(OAuth2Credentials.builder()
                 .accessToken("accessToken")
+                .allowedGroups(List.of("group1"))
                 .build()));
 
         HttpEntity<Void> requestEntityProfile = new HttpEntity<>(httpHeaders);
@@ -145,20 +150,21 @@ class LinkedInPublisherTest {
         when(restTemplate.exchange("https://api.linkedin.com/v2/ugcPosts", HttpMethod.POST, requestShare, Void.class))
                 .thenReturn(ResponseEntity.badRequest().build());
 
-        Publication publication = linkedInPublisher.publish(Post.builder()
+        List<Publication> publication = linkedInPublisher.publish(Post.builder()
                 .id("2")
                 .name("My Post 2")
                 .description("My second post")
                 .tags(List.of("tag1", "tag2"))
                 .url(URI.create("https://coderstower.com/2020/01/13/open-close-principle-by-example/").toURL())
                 .publishedDate(LocalDateTime.parse("2012-09-17T18:47:52"))
+                .group("group1")
                 .build());
 
-        assertThat(publication).isEqualTo(Publication.builder()
+        assertThat(publication).isEqualTo(List.of(Publication.builder()
                 .status(Publication.Status.FAILURE)
                 .publisher("linkedin")
                 .publishedDate(now.toLocalDateTime())
-                .build());
+                .build()));
     }
 
     @Test
@@ -168,8 +174,9 @@ class LinkedInPublisherTest {
         httpHeaders.add("X-Restli-Protocol-Version", "2.0.0");
         httpHeaders.setBearerAuth("accessToken");
 
-        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(OAuth2Credentials.builder()
+        when(oauth2CredentialsRepository.findAll()).thenReturn(List.of(OAuth2Credentials.builder()
                 .accessToken("accessToken")
+                .allowedGroups(List.of("group1"))
                 .build()));
 
         HttpEntity<Void> requestEntityProfile = new HttpEntity<>(httpHeaders);
@@ -200,20 +207,21 @@ class LinkedInPublisherTest {
         when(restTemplate.exchange("https://api.linkedin.com/v2/ugcPosts", HttpMethod.POST, requestShare, Void.class))
                 .thenReturn(ResponseEntity.ok().build());
 
-        Publication publication = linkedInPublisher.publish(Post.builder()
+        List<Publication> publication = linkedInPublisher.publish(Post.builder()
                 .id("2")
                 .name("My Post 2")
                 .description("My second post")
                 .tags(List.of("tag1", "tag2"))
                 .url(URI.create("https://coderstower.com/2020/01/13/open-close-principle-by-example/").toURL())
                 .publishedDate(LocalDateTime.parse("2012-09-17T18:47:52"))
+                .group("group1")
                 .build());
 
-        assertThat(publication).isEqualTo(Publication.builder()
+        assertThat(publication).isEqualTo(List.of(Publication.builder()
                 .status(Publication.Status.FAILURE)
                 .publisher("linkedin")
                 .publishedDate(now.toLocalDateTime())
-                .build());
+                .build()));
     }
 
     @Test
@@ -224,8 +232,9 @@ class LinkedInPublisherTest {
         httpHeaders.add("LinkedIn-Version", "202304");
         httpHeaders.setBearerAuth("accessToken");
 
-        when(oauth2CredentialsRepository.getCredentials("linkedin")).thenReturn(Optional.of(OAuth2Credentials.builder()
+        when(oauth2CredentialsRepository.findAll()).thenReturn(List.of(OAuth2Credentials.builder()
                 .accessToken("accessToken")
+                .allowedGroups(List.of("group1"))
                 .build()));
 
         HttpEntity<Void> requestEntityProfile = new HttpEntity<>(httpHeaders);
@@ -256,20 +265,21 @@ class LinkedInPublisherTest {
         when(restTemplate.exchange("https://api.linkedin.com/rest/posts", HttpMethod.POST, requestShare, Void.class))
                 .thenReturn(ResponseEntity.ok().header("X-RestLi-Id", "shareId").build());
 
-        Publication publication = linkedInPublisher.publish(Post.builder()
+        List<Publication> publication = linkedInPublisher.publish(Post.builder()
                 .id("2")
                 .name("My Post 2")
                 .description("My second post")
                 .tags(List.of("tag1", "tag2"))
                 .url(URI.create("https://coderstower.com/2020/01/13/open-close-principle-by-example/").toURL())
                 .publishedDate(LocalDateTime.parse("2012-09-17T18:47:52"))
+                .group("group1")
                 .build());
 
-        assertThat(publication).isEqualTo(Publication.builder()
+        assertThat(publication).isEqualTo(List.of(Publication.builder()
                 .id("shareId")
                 .status(Publication.Status.SUCCESS)
                 .publisher("linkedin")
                 .publishedDate(now.toLocalDateTime())
-                .build());
+                .build()));
     }
 }
