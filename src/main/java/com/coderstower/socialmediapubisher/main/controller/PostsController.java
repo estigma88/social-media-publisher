@@ -1,8 +1,8 @@
 package com.coderstower.socialmediapubisher.main.controller;
 
 
-import com.coderstower.socialmediapubisher.abstraction.post.PostPublisher;
-import com.coderstower.socialmediapubisher.abstraction.post.repository.Post;
+import com.coderstower.socialmediapubisher.domain.post.PostPublisher;
+import com.coderstower.socialmediapubisher.domain.post.repository.Post;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

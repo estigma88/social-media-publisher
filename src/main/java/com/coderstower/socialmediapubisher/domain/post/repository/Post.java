@@ -1,6 +1,6 @@
-package com.coderstower.socialmediapubisher.abstraction.post.repository;
+package com.coderstower.socialmediapubisher.domain.post.repository;
 
-import com.coderstower.socialmediapubisher.abstraction.post.socialmedia.Publication;
+import com.coderstower.socialmediapubisher.domain.post.socialmedia.Publication;
 import lombok.Builder;
 import lombok.Data;
 

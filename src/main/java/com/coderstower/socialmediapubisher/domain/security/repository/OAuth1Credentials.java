@@ -1,4 +1,4 @@
-package com.coderstower.socialmediapubisher.abstraction.security.repository;
+package com.coderstower.socialmediapubisher.domain.security.repository;
 
 import lombok.Builder;
 import lombok.Data;

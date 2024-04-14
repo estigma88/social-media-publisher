@@ -1,9 +1,7 @@
-package com.coderstower.socialmediapubisher.abstraction.security;
+package com.coderstower.socialmediapubisher.domain.security;
 
-import com.coderstower.socialmediapubisher.abstraction.security.OAuth2CredentialsManager;
-import com.coderstower.socialmediapubisher.abstraction.security.UnauthorizedException;
-import com.coderstower.socialmediapubisher.abstraction.security.repository.OAuth2Credentials;
-import com.coderstower.socialmediapubisher.abstraction.security.repository.OAuth2CredentialsRepository;
+import com.coderstower.socialmediapubisher.domain.security.repository.OAuth2Credentials;
+import com.coderstower.socialmediapubisher.domain.security.repository.OAuth2CredentialsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

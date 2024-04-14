@@ -1,9 +1,8 @@
 package com.coderstower.socialmediapubisher.main.controller;
 
-import com.coderstower.socialmediapubisher.abstraction.post.PostPublisher;
-import com.coderstower.socialmediapubisher.abstraction.post.repository.Post;
-import com.coderstower.socialmediapubisher.abstraction.post.socialmedia.Publication;
-import com.coderstower.socialmediapubisher.main.controller.PostsController;
+import com.coderstower.socialmediapubisher.domain.post.PostPublisher;
+import com.coderstower.socialmediapubisher.domain.post.repository.Post;
+import com.coderstower.socialmediapubisher.domain.post.socialmedia.Publication;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

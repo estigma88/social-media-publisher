@@ -1,12 +1,12 @@
 package com.coderstower.socialmediapubisher.main.socialmedia.linkedin;
 
-import com.coderstower.socialmediapubisher.abstraction.post.repository.Post;
-import com.coderstower.socialmediapubisher.abstraction.post.socialmedia.Acknowledge;
-import com.coderstower.socialmediapubisher.abstraction.post.socialmedia.SocialMediaPublisher;
-import com.coderstower.socialmediapubisher.abstraction.security.repository.OAuth2CredentialsRepository;
-import com.coderstower.socialmediapubisher.abstraction.post.socialmedia.Publication;
-import com.coderstower.socialmediapubisher.abstraction.security.UnauthorizedException;
-import com.coderstower.socialmediapubisher.abstraction.security.repository.OAuth2Credentials;
+import com.coderstower.socialmediapubisher.domain.post.repository.Post;
+import com.coderstower.socialmediapubisher.domain.post.socialmedia.Acknowledge;
+import com.coderstower.socialmediapubisher.domain.post.socialmedia.SocialMediaPublisher;
+import com.coderstower.socialmediapubisher.domain.security.repository.OAuth2CredentialsRepository;
+import com.coderstower.socialmediapubisher.domain.post.socialmedia.Publication;
+import com.coderstower.socialmediapubisher.domain.security.UnauthorizedException;
+import com.coderstower.socialmediapubisher.domain.security.repository.OAuth2Credentials;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;

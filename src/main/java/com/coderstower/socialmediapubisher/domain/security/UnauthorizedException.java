@@ -1,4 +1,4 @@
-package com.coderstower.socialmediapubisher.abstraction.security;
+package com.coderstower.socialmediapubisher.domain.security;
 
 public class UnauthorizedException extends RuntimeException {
     public UnauthorizedException() {

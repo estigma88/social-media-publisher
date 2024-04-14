@@ -1,6 +1,6 @@
 package com.coderstower.socialmediapubisher.main.factory;
 
-import com.coderstower.socialmediapubisher.abstraction.security.OAuth2AccessTokenResponseConverterWithDefaults;
+import com.coderstower.socialmediapubisher.domain.security.OAuth2AccessTokenResponseConverterWithDefaults;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;

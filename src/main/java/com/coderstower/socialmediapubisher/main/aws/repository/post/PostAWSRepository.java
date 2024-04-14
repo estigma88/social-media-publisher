@@ -1,7 +1,7 @@
 package com.coderstower.socialmediapubisher.main.aws.repository.post;
 
-import com.coderstower.socialmediapubisher.abstraction.post.repository.Post;
-import com.coderstower.socialmediapubisher.abstraction.post.repository.PostRepository;
+import com.coderstower.socialmediapubisher.domain.post.repository.Post;
+import com.coderstower.socialmediapubisher.domain.post.repository.PostRepository;
 
 import java.util.Comparator;
 import java.util.Optional;

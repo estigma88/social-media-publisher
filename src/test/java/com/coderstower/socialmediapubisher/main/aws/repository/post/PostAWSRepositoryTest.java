@@ -1,9 +1,6 @@
 package com.coderstower.socialmediapubisher.main.aws.repository.post;
 
-import com.coderstower.socialmediapubisher.abstraction.post.repository.Post;
-import com.coderstower.socialmediapubisher.main.aws.repository.post.PostAWSRepository;
-import com.coderstower.socialmediapubisher.main.aws.repository.post.PostDynamo;
-import com.coderstower.socialmediapubisher.main.aws.repository.post.PostDynamoRepository;
+import com.coderstower.socialmediapubisher.domain.post.repository.Post;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

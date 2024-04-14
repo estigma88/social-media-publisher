@@ -1,7 +1,7 @@
 package com.coderstower.socialmediapubisher.main.aws.repository.oauth1;
 
-import com.coderstower.socialmediapubisher.abstraction.security.repository.OAuth1Credentials;
-import com.coderstower.socialmediapubisher.abstraction.security.repository.OAuth1CredentialsRepository;
+import com.coderstower.socialmediapubisher.domain.security.repository.OAuth1Credentials;
+import com.coderstower.socialmediapubisher.domain.security.repository.OAuth1CredentialsRepository;
 
 import java.util.Optional;
 

@@ -1,6 +1,6 @@
-package com.coderstower.socialmediapubisher.abstraction.post.socialmedia;
+package com.coderstower.socialmediapubisher.domain.post.socialmedia;
 
-import com.coderstower.socialmediapubisher.abstraction.post.repository.Post;
+import com.coderstower.socialmediapubisher.domain.post.repository.Post;
 
 import java.util.List;
 

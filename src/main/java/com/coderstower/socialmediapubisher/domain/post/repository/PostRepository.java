@@ -1,4 +1,4 @@
-package com.coderstower.socialmediapubisher.abstraction.post.repository;
+package com.coderstower.socialmediapubisher.domain.post.repository;
 
 import java.util.Optional;
 

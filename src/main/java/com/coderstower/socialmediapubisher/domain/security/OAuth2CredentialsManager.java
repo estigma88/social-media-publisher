@@ -1,7 +1,7 @@
-package com.coderstower.socialmediapubisher.abstraction.security;
+package com.coderstower.socialmediapubisher.domain.security;
 
-import com.coderstower.socialmediapubisher.abstraction.security.repository.OAuth2CredentialsRepository;
-import com.coderstower.socialmediapubisher.abstraction.security.repository.OAuth2Credentials;
+import com.coderstower.socialmediapubisher.domain.security.repository.OAuth2CredentialsRepository;
+import com.coderstower.socialmediapubisher.domain.security.repository.OAuth2Credentials;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 
 import java.time.LocalDateTime;

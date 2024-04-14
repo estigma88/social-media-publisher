@@ -1,7 +1,7 @@
 package com.coderstower.socialmediapubisher.main.controller;
 
 
-import com.coderstower.socialmediapubisher.abstraction.security.OAuth2CredentialsManager;
+import com.coderstower.socialmediapubisher.domain.security.OAuth2CredentialsManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;

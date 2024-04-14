@@ -1,9 +1,6 @@
 package com.coderstower.socialmediapubisher.main.aws.repository.oauth2;
 
-import com.coderstower.socialmediapubisher.abstraction.security.repository.OAuth2Credentials;
-import com.coderstower.socialmediapubisher.main.aws.repository.oauth2.OAuth2CredentialAWSRepository;
-import com.coderstower.socialmediapubisher.main.aws.repository.oauth2.OAuth2CredentialDynamo;
-import com.coderstower.socialmediapubisher.main.aws.repository.oauth2.OAuth2CredentialDynamoRepository;
+import com.coderstower.socialmediapubisher.domain.security.repository.OAuth2Credentials;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

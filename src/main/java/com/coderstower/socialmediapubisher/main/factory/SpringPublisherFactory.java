@@ -1,11 +1,11 @@
 package com.coderstower.socialmediapubisher.main.factory;
 
-import com.coderstower.socialmediapubisher.abstraction.post.PostPublisher;
-import com.coderstower.socialmediapubisher.abstraction.post.repository.PostRepository;
-import com.coderstower.socialmediapubisher.abstraction.post.socialmedia.SocialMediaPublisher;
-import com.coderstower.socialmediapubisher.abstraction.security.OAuth2CredentialsManager;
-import com.coderstower.socialmediapubisher.abstraction.security.repository.OAuth1CredentialsRepository;
-import com.coderstower.socialmediapubisher.abstraction.security.repository.OAuth2CredentialsRepository;
+import com.coderstower.socialmediapubisher.domain.post.PostPublisher;
+import com.coderstower.socialmediapubisher.domain.post.repository.PostRepository;
+import com.coderstower.socialmediapubisher.domain.post.socialmedia.SocialMediaPublisher;
+import com.coderstower.socialmediapubisher.domain.security.OAuth2CredentialsManager;
+import com.coderstower.socialmediapubisher.domain.security.repository.OAuth1CredentialsRepository;
+import com.coderstower.socialmediapubisher.domain.security.repository.OAuth2CredentialsRepository;
 import com.coderstower.socialmediapubisher.main.socialmedia.linkedin.LinkedInPublisher;
 import com.coderstower.socialmediapubisher.main.socialmedia.twitter.TwitterPublisher;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

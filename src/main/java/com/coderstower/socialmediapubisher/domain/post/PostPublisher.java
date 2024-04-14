@@ -1,10 +1,10 @@
-package com.coderstower.socialmediapubisher.abstraction.post;
+package com.coderstower.socialmediapubisher.domain.post;
 
-import com.coderstower.socialmediapubisher.abstraction.post.repository.Post;
-import com.coderstower.socialmediapubisher.abstraction.post.repository.PostRepository;
-import com.coderstower.socialmediapubisher.abstraction.post.socialmedia.Acknowledge;
-import com.coderstower.socialmediapubisher.abstraction.post.socialmedia.Publication;
-import com.coderstower.socialmediapubisher.abstraction.post.socialmedia.SocialMediaPublisher;
+import com.coderstower.socialmediapubisher.domain.post.repository.Post;
+import com.coderstower.socialmediapubisher.domain.post.repository.PostRepository;
+import com.coderstower.socialmediapubisher.domain.post.socialmedia.Acknowledge;
+import com.coderstower.socialmediapubisher.domain.post.socialmedia.Publication;
+import com.coderstower.socialmediapubisher.domain.post.socialmedia.SocialMediaPublisher;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
