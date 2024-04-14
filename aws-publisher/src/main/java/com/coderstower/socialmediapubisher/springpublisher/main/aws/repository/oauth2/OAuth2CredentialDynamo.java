@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @DynamoDBTable(tableName = "Oauth2Credentials")
@@ -25,4 +26,6 @@ public class OAuth2CredentialDynamo {
     @DynamoDBAttribute
     @DynamoDBTypeConverted(converter = LocalDateTimeConverter.class)
     private LocalDateTime expirationDate;
+    @DynamoDBAttribute
+    private List<String> allowedGroups;
 }

@@ -19,7 +19,10 @@ import org.springframework.web.util.UriTemplate;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class LinkedInPublisher implements SocialMediaPublisher {
@@ -44,75 +47,91 @@ public class LinkedInPublisher implements SocialMediaPublisher {
 
     @Override
     public Acknowledge ping() {
-        OAuth2Credentials credentials = oauth2CredentialsRepository.getCredentials(name)
-                .orElseThrow(() -> new IllegalArgumentException("The credentials for " + name + " doesn't exist"));
+        List<OAuth2Credentials> credentials = oauth2CredentialsRepository.findAll();
 
-        if (areCredentialsExpired(credentials)) {
-            throw new UnauthorizedException("Unauthorized. Please login again here: " + loginURL.expand(name));
-        } else {
-            return Acknowledge.builder()
-                    .status(Acknowledge.Status.SUCCESS)
-                    .build();
+        if (credentials.isEmpty()) {
+            throw new IllegalArgumentException("The credentials for " + name + " doesn't exist");
         }
+
+        for (OAuth2Credentials credential : credentials) {
+            if (areCredentialsExpired(credential)) {
+                throw new UnauthorizedException("Unauthorized for " + name + " " + credential.getId() + ". Please login again here: " + loginURL.expand(name));
+            }
+        }
+
+        return Acknowledge.builder()
+                .status(Acknowledge.Status.SUCCESS)
+                .build();
     }
 
     @Override
-    public Publication publish(Post post) {
-        OAuth2Credentials credentials = oauth2CredentialsRepository.getCredentials(name)
-                .orElseThrow(() -> new IllegalArgumentException("The credentials for " + name + " doesn't exist"));
+    public List<Publication> publish(Post post) {
+        List<OAuth2Credentials> credentials = oauth2CredentialsRepository.findAll()
+                .stream()
+                .filter(oAuth2Credentials -> oAuth2Credentials.getAllowedGroups().contains(post.getGroup()))
+                .collect(Collectors.toList());
 
-        try {
-            Profile profile = getProfile(credentials);
+        List<Publication> publications = new ArrayList<>();
 
-            LinkedInShare linkedInShare = LinkedInShare.builder()
-                    .author("urn:li:person:" + profile.getSub())
-                    .commentary(post.basicFormatWithoutURL())
-                    .distribution(Distribution.builder().feedDistribution("MAIN_FEED").build())
-                    .lifecycleState("PUBLISHED")
-                    .content(Content.builder()
-                            .article(ArticleContent.builder()
-                                    .description(post.getDescription())
-                                    .title(post.getName())
-                                    .source(post.getUrl().toString())
-                                    .build())
-                            .build())
-                    .visibility("PUBLIC")
-                    .build();
+        for (OAuth2Credentials credential : credentials) {
+            try {
+                Profile profile = getProfile(credential);
 
-            String shareId = publish(linkedInShare, credentials);
-
-            if (Objects.nonNull(shareId)) {
-                return Publication.builder()
-                        .id(shareId)
-                        .status(Publication.Status.SUCCESS)
-                        .publisher(name)
-                        .publishedDate(LocalDateTime.now(clock))
+                LinkedInShare linkedInShare = LinkedInShare.builder()
+                        .author("urn:li:person:" + profile.getSub())
+                        .commentary(post.basicFormatWithoutURL())
+                        .distribution(Distribution.builder().feedDistribution("MAIN_FEED").build())
+                        .lifecycleState("PUBLISHED")
+                        .content(Content.builder()
+                                .article(ArticleContent.builder()
+                                        .description(post.getDescription())
+                                        .title(post.getName())
+                                        .source(post.getUrl().toString())
+                                        .build())
+                                .build())
+                        .visibility("PUBLIC")
                         .build();
-            } else {
-                return Publication.builder()
+
+                String shareId = publish(linkedInShare, credential);
+
+                if (Objects.nonNull(shareId)) {
+                    publications.add(Publication.builder()
+                            .id(shareId)
+                            .status(Publication.Status.SUCCESS)
+                            .publisher(name)
+                            .publishedDate(LocalDateTime.now(clock))
+                            .credentialId(credential.getId())
+                            .build());
+                } else {
+                    publications.add(Publication.builder()
+                            .status(Publication.Status.FAILURE)
+                            .publisher(name)
+                            .publishedDate(LocalDateTime.now(clock))
+                            .credentialId(credential.getId())
+                            .build());
+                }
+            } catch (HttpClientErrorException e) {
+                log.error("Error publishing to " + name + ", credentials " + credential.getId() + " response body: " + e.getResponseBodyAsString(), e);
+
+                publications.add(Publication.builder()
                         .status(Publication.Status.FAILURE)
                         .publisher(name)
                         .publishedDate(LocalDateTime.now(clock))
-                        .build();
+                        .credentialId(credential.getId())
+                        .build());
+
+            } catch (Exception e) {
+                log.error("Error publishing to " + name + ", credentials " + credential.getId(), e);
+
+                publications.add(Publication.builder()
+                        .status(Publication.Status.FAILURE)
+                        .publisher(name)
+                        .publishedDate(LocalDateTime.now(clock))
+                        .credentialId(credential.getId())
+                        .build());
             }
-        } catch (HttpClientErrorException e) {
-            log.error("Error publishing to " + name + ", response body: " + e.getResponseBodyAsString(), e);
-
-            return Publication.builder()
-                    .status(Publication.Status.FAILURE)
-                    .publisher(name)
-                    .publishedDate(LocalDateTime.now(clock))
-                    .build();
-
-        } catch (Exception e) {
-            log.error("Error publishing to " + name, e);
-
-            return Publication.builder()
-                    .status(Publication.Status.FAILURE)
-                    .publisher(name)
-                    .publishedDate(LocalDateTime.now(clock))
-                    .build();
         }
+        return publications;
     }
 
     private String publish(LinkedInShare linkedInShare, OAuth2Credentials credentials) {

@@ -104,19 +104,19 @@ class PostPublisherTest {
         when(postRepository.getNextToPublish("group1")).thenReturn(Optional.of(post));
         when(socialMediaPublisher1.ping()).thenReturn(Acknowledge.builder()
                 .status(Acknowledge.Status.SUCCESS).build());
-        when(socialMediaPublisher1.publish(post)).thenReturn(Publication.builder()
+        when(socialMediaPublisher1.publish(post)).thenReturn(List.of(Publication.builder()
                 .id("id")
                 .publishedDate(LocalDateTime.of(2020, 3, 3, 5, 6, 8, 1))
                 .status(Publication.Status.SUCCESS)
                 .publisher("TWITTER")
-                .build());
+                .build()));
         when(socialMediaPublisher2.ping()).thenReturn(Acknowledge.builder()
                 .status(Acknowledge.Status.SUCCESS).build());
-        when(socialMediaPublisher2.publish(post)).thenReturn(Publication.builder()
+        when(socialMediaPublisher2.publish(post)).thenReturn(List.of(Publication.builder()
                 .publishedDate(LocalDateTime.of(2020, 3, 3, 5, 6, 8, 1))
                 .status(Publication.Status.FAILURE)
                 .publisher("LINKEDIN")
-                .build());
+                .build()));
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> postPublisher.publishNext("group1"));
 
@@ -171,20 +171,20 @@ class PostPublisherTest {
         when(postRepository.getNextToPublish("group1")).thenReturn(Optional.of(post));
         when(socialMediaPublisher1.ping()).thenReturn(Acknowledge.builder()
                 .status(Acknowledge.Status.SUCCESS).build());
-        when(socialMediaPublisher1.publish(post)).thenReturn(Publication.builder()
+        when(socialMediaPublisher1.publish(post)).thenReturn(List.of(Publication.builder()
                 .id("id")
                 .publishedDate(LocalDateTime.of(2020, 3, 3, 5, 6, 8, 1))
                 .status(Publication.Status.SUCCESS)
                 .publisher("TWITTER")
-                .build());
+                .build()));
         when(socialMediaPublisher2.ping()).thenReturn(Acknowledge.builder()
                 .status(Acknowledge.Status.SUCCESS).build());
-        when(socialMediaPublisher2.publish(post)).thenReturn(Publication.builder()
+        when(socialMediaPublisher2.publish(post)).thenReturn(List.of(Publication.builder()
                 .id("id")
                 .publishedDate(LocalDateTime.of(2020, 3, 3, 5, 6, 8, 1))
                 .status(Publication.Status.SUCCESS)
                 .publisher("LINKEDIN")
-                .build());
+                .build()));
         when(postRepository.update(postUpdated)).thenReturn(postUpdated);
 
         Post publishedPost = postPublisher.publishNext("group1");

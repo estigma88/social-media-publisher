@@ -139,7 +139,7 @@ class TwitterPublisherTest {
         when(twitter.getAuthorization()).thenReturn(NullAuthorization.getInstance());
         when(twitter.updateStatus("My second post\n\n#tag1 #tag2\n\nhttps://coderstower.com/2020/01/13/open-close-principle-by-example/")).thenThrow(new TwitterException("error"));
 
-        Publication publish = twitterPublisher.publish(Post.builder()
+        List<Publication> publish = twitterPublisher.publish(Post.builder()
                 .id("2")
                 .name("My Post 2")
                 .description("My second post")
@@ -148,11 +148,11 @@ class TwitterPublisherTest {
                 .publishedDate(LocalDateTime.parse("2012-09-17T18:47:52"))
                 .build());
 
-        assertThat(publish).isEqualTo(Publication.builder()
+        assertThat(publish).isEqualTo(List.of(Publication.builder()
                 .status(Publication.Status.FAILURE)
                 .publisher("twitter")
                 .publishedDate(now.toLocalDateTime())
-                .build());
+                .build()));
         verify(twitter).setOAuthConsumer("consumerKey", "consumerSecret");
         verify(twitter).setOAuthAccessToken(new AccessToken("accessToken", "tokenSecret"));
     }
@@ -168,7 +168,7 @@ class TwitterPublisherTest {
         when(twitter.getAuthorization()).thenReturn(mock(Authorization.class));
         when(twitter.updateStatus("My second post\n\n#tag1 #tag2\n\nhttps://coderstower.com/2020/01/13/open-close-principle-by-example/")).thenReturn(null);
 
-        Publication publish = twitterPublisher.publish(Post.builder()
+        List<Publication> publish = twitterPublisher.publish(Post.builder()
                 .id("2")
                 .name("My Post 2")
                 .description("My second post")
@@ -177,11 +177,11 @@ class TwitterPublisherTest {
                 .publishedDate(LocalDateTime.parse("2012-09-17T18:47:52"))
                 .build());
 
-        assertThat(publish).isEqualTo(Publication.builder()
+        assertThat(publish).isEqualTo(List.of(Publication.builder()
                 .status(Publication.Status.FAILURE)
                 .publisher("twitter")
                 .publishedDate(now.toLocalDateTime())
-                .build());
+                .build()));
         verify(twitter, times(0)).setOAuthConsumer("consumerKey", "consumerSecret");
         verify(twitter, times(0)).setOAuthAccessToken(new AccessToken("accessToken", "tokenSecret"));
     }
@@ -200,7 +200,7 @@ class TwitterPublisherTest {
         when(status.getId()).thenReturn(123L);
         when(twitter.updateStatus("My second post\n\n#tag1 #tag2\n\nhttps://coderstower.com/2020/01/13/open-close-principle-by-example/")).thenReturn(status);
 
-        Publication publish = twitterPublisher.publish(Post.builder()
+        List<Publication> publish = twitterPublisher.publish(Post.builder()
                 .id("2")
                 .name("My Post 2")
                 .description("My second post")
@@ -209,12 +209,12 @@ class TwitterPublisherTest {
                 .publishedDate(LocalDateTime.parse("2012-09-17T18:47:52"))
                 .build());
 
-        assertThat(publish).isEqualTo(Publication.builder()
+        assertThat(publish).isEqualTo(List.of(Publication.builder()
                 .id("123")
                 .status(Publication.Status.SUCCESS)
                 .publisher("twitter")
                 .publishedDate(now.toLocalDateTime())
-                .build());
+                .build()));
         verify(twitter, times(0)).setOAuthConsumer("consumerKey", "consumerSecret");
         verify(twitter, times(0)).setOAuthAccessToken(new AccessToken("accessToken", "tokenSecret"));
     }
