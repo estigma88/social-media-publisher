@@ -12,4 +12,5 @@ import java.util.Map;
 public class SocialMediaPublisherProperties {
     private final Map<String, String> principalNamesAllowed;
     private final CredentialsProperties credentials;
+    private final LinkedInProperties linkedIn;
 }

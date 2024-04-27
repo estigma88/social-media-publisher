@@ -41,7 +41,7 @@ class LinkedInPublisherTest {
     public void before() {
         this.now = ZonedDateTime.of(2020, 3, 3, 5, 6, 8, 1, ZoneId.of("UTC"));
         this.linkedInPublisher = new LinkedInPublisher("linkedin", oauth2CredentialsRepository, restTemplate, Clock
-                .fixed(now.toInstant(), ZoneId.of("UTC")), new UriTemplate("http://localhost:8080/oauth2/{social-media}/credentials"));
+                .fixed(now.toInstant(), ZoneId.of("UTC")), new UriTemplate("http://localhost:8080/oauth2/{social-media}/credentials"), URI.create("http://localhost:8080"));
     }
 
     @Test

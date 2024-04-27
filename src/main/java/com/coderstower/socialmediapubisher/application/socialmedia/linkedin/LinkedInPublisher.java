@@ -13,6 +13,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriTemplate;
 
+import java.net.URI;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,13 +28,15 @@ public class LinkedInPublisher implements SocialMediaPublisher {
     private final RestTemplate restTemplate;
     private final Clock clock;
     private final UriTemplate loginURL;
+    private final URI baseURL;
 
-    public LinkedInPublisher(String name, OAuth2CredentialsRepository oauth2CredentialsRepository, RestTemplate restTemplate, Clock clock, UriTemplate loginURL) {
+    public LinkedInPublisher(String name, OAuth2CredentialsRepository oauth2CredentialsRepository, RestTemplate restTemplate, Clock clock, UriTemplate loginURL, URI baseURL) {
         this.name = name;
         this.oauth2CredentialsRepository = oauth2CredentialsRepository;
         this.restTemplate = restTemplate;
         this.clock = clock;
         this.loginURL = loginURL;
+        this.baseURL = baseURL;
     }
 
     @Override
@@ -139,7 +142,7 @@ public class LinkedInPublisher implements SocialMediaPublisher {
 
         HttpEntity<LinkedInShare> requestEntity = new HttpEntity<>(linkedInShare, httpHeaders);
 
-        ResponseEntity<Void> response = restTemplate.exchange("https://api.linkedin.com/rest/posts", HttpMethod.POST, requestEntity, Void.class);
+        ResponseEntity<Void> response = restTemplate.exchange(baseURL + "/rest/posts", HttpMethod.POST, requestEntity, Void.class);
 
         if (!response.getStatusCode().is2xxSuccessful()) {
             throw new IllegalStateException("Problem trying to share a linkedin post: " + response.getStatusCode());
@@ -157,7 +160,7 @@ public class LinkedInPublisher implements SocialMediaPublisher {
 
         HttpEntity<Void> requestEntity = new HttpEntity<>(httpHeaders);
 
-        ResponseEntity<Profile> response = restTemplate.exchange("https://api.linkedin.com/v2/userinfo", HttpMethod.GET, requestEntity, Profile.class);
+        ResponseEntity<Profile> response = restTemplate.exchange(baseURL + "/v2/userinfo", HttpMethod.GET, requestEntity, Profile.class);
 
         if (!response.getStatusCode().is2xxSuccessful()) {
             throw new IllegalStateException("Problem trying to get the profile: " + response.getStatusCode());

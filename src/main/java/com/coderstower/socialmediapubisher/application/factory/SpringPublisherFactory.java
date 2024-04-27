@@ -40,17 +40,6 @@ public class SpringPublisherFactory {
     }
 
     @Bean
-    @Profile("linkedin")
-    public LinkedInPublisher linkedInPublisher(OAuth2CredentialsRepository oauth2CredentialsRepository, RestTemplate restTemplate, Clock clock, SocialMediaPublisherProperties socialMediaPublisherProperties) {
-        return new LinkedInPublisher("linkedin", oauth2CredentialsRepository, restTemplate, clock, socialMediaPublisherProperties.getCredentials().getLoginUrl());
-    }
-
-    @Bean
-    public OAuth2CredentialsManager oAuth2CredentialsManager(OAuth2CredentialsRepository oAuth2CredentialsRepository, SocialMediaPublisherProperties socialMediaPublisherProperties) {
-        return new OAuth2CredentialsManager(oAuth2CredentialsRepository, socialMediaPublisherProperties.getPrincipalNamesAllowed());
-    }
-
-    @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }

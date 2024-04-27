@@ -1,0 +1,14 @@
+social-media-publisher:
+  principal-names-allowed:
+    linkedin: xxx
+  linked-in:
+    base-url: http://localhost:9090
+
+amazon:
+  dynamodb:
+    accesskey: xxx
+    secretkey: xxx
+
+spring:
+  main:
+    allow-bean-definition-overriding: true

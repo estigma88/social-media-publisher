@@ -5,6 +5,8 @@ plugins {
     id("io.spring.dependency-management") version "1.1.4"
 }
 
+extra["springCloudVersion"] = "2023.0.1"
+
 repositories {
     mavenCentral()
 }
@@ -40,6 +42,12 @@ val itest = task<Test>("itest") {
 
 tasks.check { dependsOn(itest) }
 
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+    }
+}
+
 dependencies {
     implementation(libs.org.springframework.boot.spring.boot.starter.web)
     implementation(libs.org.springframework.boot.spring.boot.starter.security)
@@ -49,6 +57,7 @@ dependencies {
     implementation(libs.com.amazonaws.serverless.aws.serverless.java.container.springboot2)
     testImplementation(libs.org.springframework.boot.spring.boot.starter.test)
     testImplementation(libs.org.springframework.security.spring.security.test)
+    itestImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner")
     itestImplementation(libs.org.springframework.boot.spring.boot.starter.test)
     itestImplementation("org.testcontainers:localstack")
 

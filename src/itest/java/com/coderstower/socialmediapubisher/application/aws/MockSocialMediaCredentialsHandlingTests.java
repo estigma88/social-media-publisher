@@ -1,13 +1,13 @@
 package com.coderstower.socialmediapubisher.application.aws;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.local.embedded.DynamoDBEmbedded;
+//import com.amazonaws.services.dynamodbv2.local.embedded.DynamoDBEmbedded;
 import com.amazonaws.services.dynamodbv2.model.*;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junitpioneer.jupiter.SetSystemProperty;
+//import org.junitpioneer.jupiter.SetSystemProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,8 +40,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+//import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
+//import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -68,7 +68,7 @@ class MockSocialMediaCredentialsHandlingTests {
         mockingTwitter();
 
         mvc.perform(post("/posts/group1/next")
-                .with(csrf())
+//                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().string("Unauthorized for linkedin credential1. Please login again here: http://localhost:8080/oauth2/linkedin/credentials"));
@@ -95,7 +95,7 @@ class MockSocialMediaCredentialsHandlingTests {
                 .thenReturn(authorizedClient);
 
         mvc.perform(get("/oauth2/linkedin/credentials")
-                .with(authentication(authenticationToken))
+//                .with(authentication(authenticationToken))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
@@ -129,33 +129,33 @@ class MockSocialMediaCredentialsHandlingTests {
             return Clock.fixed(ZonedDateTime.of(2020, 3, 3, 5, 6, 8, 1, ZoneId.of("UTC")).toInstant(), ZoneId.of("UTC"));
         }
 
-        @Bean
-        public AmazonDynamoDB amazonDynamoDB() {
-            AmazonDynamoDB ddb = DynamoDBEmbedded.create().amazonDynamoDB();
-
-            createTable(ddb, "Oauth1Credentials", "id");
-            createTable(ddb, "Oauth2Credentials", "id");
-
-            PutItemRequest oauth2Credentials = new PutItemRequest();
-            oauth2Credentials.setTableName("Oauth2Credentials");
-            oauth2Credentials.addItemEntry("id", new AttributeValue("credential1"));
-            oauth2Credentials.addItemEntry("accessToken", new AttributeValue("access123"));
-            oauth2Credentials.addItemEntry("expirationDate", new AttributeValue("2020-02-01T05:05:05"));
-
-            ddb.putItem(oauth2Credentials);
-
-            PutItemRequest oauth1Credentials = new PutItemRequest();
-            oauth1Credentials.setTableName("Oauth1Credentials");
-            oauth1Credentials.addItemEntry("id", new AttributeValue("twitter"));
-            oauth1Credentials.addItemEntry("accessToken", new AttributeValue("access123"));
-            oauth1Credentials.addItemEntry("consumerKey", new AttributeValue("consumer123"));
-            oauth1Credentials.addItemEntry("consumerSecret", new AttributeValue("csecret123"));
-            oauth1Credentials.addItemEntry("tokenSecret", new AttributeValue("tsecret123"));
-
-            ddb.putItem(oauth1Credentials);
-
-            return ddb;
-        }
+//        @Bean
+//        public AmazonDynamoDB amazonDynamoDB() {
+//            AmazonDynamoDB ddb = DynamoDBEmbedded.create().amazonDynamoDB();
+//
+//            createTable(ddb, "Oauth1Credentials", "id");
+//            createTable(ddb, "Oauth2Credentials", "id");
+//
+//            PutItemRequest oauth2Credentials = new PutItemRequest();
+//            oauth2Credentials.setTableName("Oauth2Credentials");
+//            oauth2Credentials.addItemEntry("id", new AttributeValue("credential1"));
+//            oauth2Credentials.addItemEntry("accessToken", new AttributeValue("access123"));
+//            oauth2Credentials.addItemEntry("expirationDate", new AttributeValue("2020-02-01T05:05:05"));
+//
+//            ddb.putItem(oauth2Credentials);
+//
+//            PutItemRequest oauth1Credentials = new PutItemRequest();
+//            oauth1Credentials.setTableName("Oauth1Credentials");
+//            oauth1Credentials.addItemEntry("id", new AttributeValue("twitter"));
+//            oauth1Credentials.addItemEntry("accessToken", new AttributeValue("access123"));
+//            oauth1Credentials.addItemEntry("consumerKey", new AttributeValue("consumer123"));
+//            oauth1Credentials.addItemEntry("consumerSecret", new AttributeValue("csecret123"));
+//            oauth1Credentials.addItemEntry("tokenSecret", new AttributeValue("tsecret123"));
+//
+//            ddb.putItem(oauth1Credentials);
+//
+//            return ddb;
+//        }
 
         private CreateTableResult createTable(AmazonDynamoDB ddb, String tableName, String hashKeyName) {
             List<AttributeDefinition> attributeDefinitions = new ArrayList<>();
