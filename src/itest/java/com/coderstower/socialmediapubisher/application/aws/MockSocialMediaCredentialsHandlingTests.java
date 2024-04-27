@@ -48,7 +48,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@SetSystemProperty(key = "sqlite4java.library.path", value = "target/native-libs")
+//@SetSystemProperty(key = "sqlite4java.library.path", value = "target/native-libs")
 @TestPropertySource(properties = {"social-media-publisher.principal-names-allowed.linkedin=myuser"})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles({"linkedin", "twitter, secure"})
