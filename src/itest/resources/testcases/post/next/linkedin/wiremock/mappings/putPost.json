@@ -1,0 +1,51 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/",
+    "headers": {
+      "X-Amz-Target": {
+        "equalTo": "DynamoDB_20120810.PutItem"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "TableName": "Posts",
+          "Item": {
+            "name": {
+              "S": "Post 1"
+            },
+            "description": {
+              "S": "This is a new post 1"
+            },
+            "publishedDate": {
+              "S": "2020-03-03T05:06:08.000000001"
+            },
+            "id": {
+              "S": "post1"
+            },
+            "url": {
+              "S": "http://coders.com/post1"
+            },
+            "tags": {
+              "L": [
+                {
+                  "S": "java"
+                },
+                {
+                  "S": "code"
+                }
+              ]
+            },
+            "group": {
+              "S": "group1"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 200
+  }
+}

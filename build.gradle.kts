@@ -60,6 +60,7 @@ dependencies {
     itestImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner")
     itestImplementation(libs.org.springframework.boot.spring.boot.starter.test)
     itestImplementation("org.testcontainers:localstack")
+    itestImplementation("io.rest-assured:rest-assured:5.4.0")
 
 }
 

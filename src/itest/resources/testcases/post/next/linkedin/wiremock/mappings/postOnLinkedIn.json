@@ -1,0 +1,32 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/rest/posts",
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "commentary": "This is a new post 1\n\n#java #code",
+          "distribution": {
+            "feedDistribution": "MAIN_FEED"
+          },
+          "author": "urn:li:person:account123",
+          "lifecycleState": "PUBLISHED",
+          "content": {
+            "article": {
+              "title": "Post 1",
+              "description": "This is a new post 1",
+              "source": "http://coders.com/post1"
+            }
+          },
+          "visibility": "PUBLIC"
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "X-RestLi-Id": "linkedIn123"
+    }
+  }
+}

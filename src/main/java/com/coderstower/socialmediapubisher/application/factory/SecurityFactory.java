@@ -1,23 +1,10 @@
 package com.coderstower.socialmediapubisher.application.factory;
 
-import com.coderstower.socialmediapubisher.domain.security.OAuth2AccessTokenResponseConverterWithDefaults;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.core.annotation.Order;
-import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-//import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
-import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
-import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
-import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
-import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.Arrays;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
@@ -80,4 +67,16 @@ public class SecurityFactory {
 //                    .permitAll();
 //        }
 //    }
+    @Bean
+    public SecurityFilterChain noSecurity(HttpSecurity http) throws Exception {
+        return http
+                .csrf().disable()
+                .securityMatcher("/**")
+                .authorizeHttpRequests(authorize ->
+                        authorize
+                                .anyRequest()
+                                .permitAll()
+                )
+                .build();
+    }
 }

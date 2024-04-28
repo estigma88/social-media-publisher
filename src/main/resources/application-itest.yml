@@ -2,7 +2,7 @@ social-media-publisher:
   principal-names-allowed:
     linkedin: xxx
   linked-in:
-    base-url: http://localhost:9090
+    base-url: http://localhost:8089
 
 amazon:
   dynamodb:
@@ -12,3 +12,10 @@ amazon:
 spring:
   main:
     allow-bean-definition-overriding: true
+
+logging:
+  level:
+    com:
+      github:
+        tomakehurst:
+          wiremock: debug
