@@ -1,10 +1,10 @@
-package com.coderstower.socialmediapubisher.application;
+package com.coderstower.socialmediapubisher.extesion;
 
 import com.github.tomakehurst.wiremock.common.Notifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class SpringSlf4jNotifier implements Notifier {
+public class SpringSlf4jNotifier implements Notifier {
     private static final Logger log = LoggerFactory.getLogger(SpringSlf4jNotifier.class);
 
     public void info(String message) {
