@@ -1,4 +1,0 @@
-INSERT INTO post_entity (id, name, description, tags, url, published_date) VALUES ('1', 'My Post 1', 'My first post', 'tag1,tag2', 'https://coderstower.com/2020/02/18/unit-tests-vs-integration-tests/', '2013-09-17 18:47:52');
-INSERT INTO post_entity (id, name, description, tags, url, published_date) VALUES ('2', 'My Post 2', 'My second post', 'tag1,tag2', 'https://coderstower.com/2020/01/13/open-close-principle-by-example/', '2012-09-17 18:47:52');
-
-INSERT INTO oauth1credential_entity (id, consumer_key, consumer_secret, access_token, token_secret) VALUES ('twitter', 'Consumer twitter', 'Consumer Secret twitter', 'Access Token twitter', 'Token Secret twitter');
