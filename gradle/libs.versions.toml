@@ -2,22 +2,19 @@
 # https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
 
 [versions]
-com-amazonaws-dynamodblocal = "1.13.0"
-com-amazonaws-serverless-aws-serverless-java-container-springboot2 = "1.5"
+com-amazonaws-serverless-aws-serverless-java-container-springboot3 = "2.0.1"
 io-github-boostchicken-spring-data-dynamodb = "5.2.5"
-org-junit-pioneer-junit-pioneer = "0.5.1"
-org-projectlombok-lombok = "1.18.12"
 org-twitter4j-twitter4j-core = "4.0.7"
+io-rest-assured-rest-assured = "5.4.0"
 
 [libraries]
-com-amazonaws-dynamodblocal = { module = "com.amazonaws:DynamoDBLocal", version.ref = "com-amazonaws-dynamodblocal" }
-com-amazonaws-serverless-aws-serverless-java-container-springboot2 = { module = "com.amazonaws.serverless:aws-serverless-java-container-springboot2", version.ref = "com-amazonaws-serverless-aws-serverless-java-container-springboot2" }
+com-amazonaws-serverless-aws-serverless-java-container-springboot3 = { module = "com.amazonaws.serverless:aws-serverless-java-container-springboot3", version.ref = "com-amazonaws-serverless-aws-serverless-java-container-springboot3" }
 io-github-boostchicken-spring-data-dynamodb = { module = "io.github.boostchicken:spring-data-dynamodb", version.ref = "io-github-boostchicken-spring-data-dynamodb" }
-org-junit-pioneer-junit-pioneer = { module = "org.junit-pioneer:junit-pioneer", version.ref = "org-junit-pioneer-junit-pioneer" }
-org-projectlombok-lombok = { module = "org.projectlombok:lombok", version.ref = "org-projectlombok-lombok" }
 org-springframework-boot-spring-boot-starter-oauth2-client = { module = "org.springframework.boot:spring-boot-starter-oauth2-client" }
 org-springframework-boot-spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-starter-security"}
 org-springframework-boot-spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 org-springframework-boot-spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
 org-springframework-security-spring-security-test = { module = "org.springframework.security:spring-security-test" }
+org-springframework-cloud-spring-cloud-starter-contract-stub-runner = { module = "org.springframework.cloud:spring-cloud-starter-contract-stub-runner" }
+io-rest-assured-rest-assured = { module = "io.rest-assured:rest-assured", version.ref = "io-rest-assured-rest-assured"}
 org-twitter4j-twitter4j-core = { module = "org.twitter4j:twitter4j-core", version.ref = "org-twitter4j-twitter4j-core" }

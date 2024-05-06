@@ -54,13 +54,12 @@ dependencies {
     implementation(libs.org.springframework.boot.spring.boot.starter.oauth2.client)
     implementation(libs.org.twitter4j.twitter4j.core)
     implementation(libs.io.github.boostchicken.spring.data.dynamodb)
-    implementation(libs.com.amazonaws.serverless.aws.serverless.java.container.springboot2)
+    implementation(libs.com.amazonaws.serverless.aws.serverless.java.container.springboot3)
     testImplementation(libs.org.springframework.boot.spring.boot.starter.test)
     testImplementation(libs.org.springframework.security.spring.security.test)
-    itestImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner")
+    itestImplementation(libs.org.springframework.cloud.spring.cloud.starter.contract.stub.runner)
     itestImplementation(libs.org.springframework.boot.spring.boot.starter.test)
-    itestImplementation("org.testcontainers:localstack")
-    itestImplementation("io.rest-assured:rest-assured:5.4.0")
+    itestImplementation(libs.io.rest.assured.rest.assured)
 
 }
 
