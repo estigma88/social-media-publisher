@@ -1,4 +1,4 @@
-package com.coderstower.socialmediapubisher.application.aws;
+package com.coderstower.socialmediapubisher.application.aws.lambda;
 
 
 import com.amazonaws.serverless.exceptions.ContainerInitializationException;

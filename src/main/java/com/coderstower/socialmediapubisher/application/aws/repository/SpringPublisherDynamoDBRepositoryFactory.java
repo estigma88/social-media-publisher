@@ -1,4 +1,4 @@
-package com.coderstower.socialmediapubisher.application.aws;
+package com.coderstower.socialmediapubisher.application.aws.repository;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -12,6 +12,7 @@ import com.coderstower.socialmediapubisher.application.aws.repository.oauth2.OAu
 import com.coderstower.socialmediapubisher.application.aws.repository.oauth2.OAuth2CredentialDynamoRepository;
 import com.coderstower.socialmediapubisher.application.aws.repository.post.PostAWSRepository;
 import com.coderstower.socialmediapubisher.application.aws.repository.post.PostDynamoRepository;
+import com.coderstower.socialmediapubisher.application.aws.repository.post.ReadOnlyPostAWSRepository;
 import org.socialsignin.spring.data.dynamodb.repository.config.EnableDynamoDBRepositories;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -57,8 +58,16 @@ public class SpringPublisherDynamoDBRepositoryFactory {
     }
 
     @Bean
+    @Profile("!read-only")
     public PostAWSRepository postAWSRepository(
             PostDynamoRepository postDynamoRepository) {
         return new PostAWSRepository(postDynamoRepository);
+    }
+
+    @Bean
+    @Profile("read-only")
+    public PostAWSRepository readOnlyPostAWSRepository(
+            PostDynamoRepository postDynamoRepository) {
+        return new ReadOnlyPostAWSRepository(postDynamoRepository);
     }
 }

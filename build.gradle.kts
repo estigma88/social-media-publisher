@@ -74,3 +74,14 @@ java {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+tasks.register("zip", Zip::class) {
+    description = "Zip to deploy to lambda."
+    group = "build"
+
+    from(sourceSets.main.get().output)
+    into("lib") {
+        from(configurations.runtimeClasspath)
+    }
+}
+
