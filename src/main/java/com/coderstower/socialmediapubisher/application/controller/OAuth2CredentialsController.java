@@ -3,6 +3,7 @@ package com.coderstower.socialmediapubisher.application.controller;
 
 import com.coderstower.socialmediapubisher.domain.security.OAuth2CredentialsManager;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
+@Profile("linkedin")
 public class OAuth2CredentialsController {
     private final OAuth2CredentialsManager oAuth2CredentialsManager;
 
