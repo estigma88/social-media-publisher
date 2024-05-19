@@ -1,0 +1,21 @@
+social-media-publisher:
+  principal-names-allowed:
+    linkedin: xxx
+  linked-in:
+    base-url: http://localhost:8089
+
+amazon:
+  dynamodb:
+    accesskey: xxx
+    secretkey: xxx
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
+logging:
+  level:
+    com:
+      github:
+        tomakehurst:
+          wiremock: debug

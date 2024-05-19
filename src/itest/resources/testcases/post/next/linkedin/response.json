@@ -1,0 +1,21 @@
+{
+  "id": "post1",
+  "name": "Post 1",
+  "description": "This is a new post 1",
+  "tags": [
+    "java",
+    "code"
+  ],
+  "url": "http://coders.com/post1",
+  "publishedDate": "2020-03-03T05:06:08.000000001",
+  "publications": [
+    {
+      "id": "linkedIn123",
+      "status": "SUCCESS",
+      "publisher": "linkedin",
+      "credentialId": "id132",
+      "publishedDate": "2020-03-03T05:06:08.000000001"
+    }
+  ],
+  "group": "group1"
+}

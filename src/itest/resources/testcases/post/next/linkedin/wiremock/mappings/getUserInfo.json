@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/v2/userinfo"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "sub": "account123"
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

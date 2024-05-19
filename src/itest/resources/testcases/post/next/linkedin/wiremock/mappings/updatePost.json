@@ -1,0 +1,72 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/",
+    "headers": {
+      "X-Amz-Target": {
+        "equalTo": "DynamoDB_20120810.UpdateItem"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "TableName": "Posts",
+          "Key": {
+            "id": {
+              "S": "post1"
+            }
+          },
+          "AttributeUpdates": {
+            "name": {
+              "Value": {
+                "S": "Post 1"
+              },
+              "Action": "PUT"
+            },
+            "description": {
+              "Value": {
+                "S": "This is a new post 1"
+              },
+              "Action": "PUT"
+            },
+            "publishedDate": {
+              "Value": {
+                "S": "2020-03-03T05:06:08.000000001"
+              },
+              "Action": "PUT"
+            },
+            "url": {
+              "Value": {
+                "S": "http://coders.com/post1"
+              },
+              "Action": "PUT"
+            },
+            "tags": {
+              "Value": {
+                "L": [
+                  {
+                    "S": "java"
+                  },
+                  {
+                    "S": "code"
+                  }
+                ]
+              },
+              "Action": "PUT"
+            },
+            "group": {
+              "Value": {
+                "S": "group1"
+              },
+              "Action": "PUT"
+            }
+          },
+          "ReturnValues": "ALL_NEW"
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 200
+  }
+}

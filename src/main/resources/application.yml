@@ -1,0 +1,17 @@
+# Reduce logging level to make sure the application works with SAM local
+# https://github.com/awslabs/aws-serverless-java-container/issues/134
+#logging:
+#  level:
+#    root: WARN
+
+spring:
+  profiles:
+    group:
+      itest: linkedin
+
+social-media-publisher:
+  linked-in:
+    base-url: https://api.linkedin.com
+  credentials:
+    login-host: 'http://localhost:8080'
+    login-url: '${social-media-publisher.credentials.login-host}/oauth2/{social-media-id}/credentials'
