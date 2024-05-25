@@ -12,6 +12,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.mail.MailSender;
 import org.springframework.web.client.RestTemplate;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
@@ -29,8 +30,8 @@ public class SpringPublisherFactory {
     }
 
     @Bean
-    public PostPublisher postPublisher(List<SocialMediaPublisher> socialMediaPublishers, PostRepository postRepository, Clock clock) {
-        return new PostPublisher(socialMediaPublishers, postRepository, clock);
+    public PostPublisher postPublisher(List<SocialMediaPublisher> socialMediaPublishers, PostRepository postRepository, Clock clock, MailSender mailSender) {
+        return new PostPublisher(socialMediaPublishers, postRepository, clock, mailSender);
     }
 
     @Bean

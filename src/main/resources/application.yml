@@ -8,6 +8,11 @@ spring:
   profiles:
     group:
       itest: linkedin
+  cloud:
+     aws:
+        ses:
+          region: eu-west-1
+          sourceArn: arn:aws:ses:eu-west-1:123456789012:identity/example.com
 
 social-media-publisher:
   linked-in:

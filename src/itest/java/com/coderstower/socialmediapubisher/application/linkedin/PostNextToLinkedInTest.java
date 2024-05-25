@@ -24,5 +24,7 @@ public class PostNextToLinkedInTest extends MockedEdgesConfig {
                 .asString();
 
         iTestHandler.validateJSONResponse("testcases/post/next/linkedin/response.json", response);
+
+        //TODO validate updated publish date
     }
 }

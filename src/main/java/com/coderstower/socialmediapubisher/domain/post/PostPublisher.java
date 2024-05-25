@@ -5,39 +5,69 @@ import com.coderstower.socialmediapubisher.domain.post.repository.PostRepository
 import com.coderstower.socialmediapubisher.domain.post.socialmedia.Acknowledge;
 import com.coderstower.socialmediapubisher.domain.post.socialmedia.Publication;
 import com.coderstower.socialmediapubisher.domain.post.socialmedia.SocialMediaPublisher;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Slf4j
 public class PostPublisher {
     private final List<SocialMediaPublisher> socialMediaPublishers;
     private final PostRepository postRepository;
     private final Clock clock;
+    private final MailSender mailSender;
+    private final String emailToNotifyResult;
 
-    public PostPublisher(List<SocialMediaPublisher> socialMediaPublishers, PostRepository postRepository, Clock clock) {
+    public PostPublisher(List<SocialMediaPublisher> socialMediaPublishers, PostRepository postRepository, Clock clock, MailSender mailSender, String emailToNotifyResult) {
         this.socialMediaPublishers = socialMediaPublishers;
         this.postRepository = postRepository;
         this.clock = clock;
+        this.mailSender = mailSender;
+        this.emailToNotifyResult = emailToNotifyResult;
     }
 
     public Post publishNext(String group) {
-        ping(socialMediaPublishers);
+        try{
+            ping(socialMediaPublishers);
 
-        Post nextPost = postRepository.getNextToPublish(group)
-                .orElseThrow(() -> new IllegalStateException("There is not next post to publish"));
+            Post nextPost = postRepository.getNextToPublish(group)
+                    .orElseThrow(() -> new IllegalStateException("There is not next post to publish"));
 
-        List<Publication> publishedPosts = publish(socialMediaPublishers, nextPost);
+            List<Publication> publishedPosts = publish(socialMediaPublishers, nextPost);
 
-        if (publishedWellOK(publishedPosts)) {
-            Post toUpdate = nextPost.updateLastDatePublished(LocalDateTime.now(clock));
+            if (publishedWellOK(publishedPosts)) {
+                Post toUpdate = nextPost.updateLastDatePublished(LocalDateTime.now(clock));
 
-            return postRepository.update(toUpdate)
-                    .updatePublications(publishedPosts);
-        } else {
-            throw new IllegalStateException("Error publishing the post: " + nextPost
-                    .updatePublications(publishedPosts));
+                Post postUpdated = postRepository.update(toUpdate)
+                        .updatePublications(publishedPosts);
+
+                SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+                simpleMailMessage.setTo(emailToNotifyResult);
+                simpleMailMessage.setSubject("SocialMediaPublisher: Success publishing group " + group);
+                simpleMailMessage.setText(postUpdated.toString());
+                mailSender.send(simpleMailMessage);
+
+                return postUpdated;
+            } else {
+                throw new IllegalStateException("Error publishing the post: " + nextPost
+                        .updatePublications(publishedPosts));
+            }
+        } catch (Exception e) {
+            PrintWriter stackTrace = new PrintWriter(new StringWriter());
+            e.printStackTrace(stackTrace);
+
+            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+            simpleMailMessage.setTo(emailToNotifyResult);
+            simpleMailMessage.setSubject("SocialMediaPublisher: Error publishing group " + group);
+            simpleMailMessage.setText(stackTrace.toString());
+            mailSender.send(simpleMailMessage);
+
+            throw e;
         }
     }
 
