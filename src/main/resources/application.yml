@@ -18,6 +18,7 @@ spring:
     host: smtp.gmail.com
     password: xxxxx
     username: yyyyy
+    port: 587
 
 social-media-publisher:
   post:
