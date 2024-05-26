@@ -1,17 +1,15 @@
 package com.coderstower.socialmediapubisher.application.factory;
 
+import com.coderstower.socialmediapubisher.application.socialmedia.twitter.TwitterPublisher;
 import com.coderstower.socialmediapubisher.domain.post.PostPublisher;
 import com.coderstower.socialmediapubisher.domain.post.repository.PostRepository;
 import com.coderstower.socialmediapubisher.domain.post.socialmedia.SocialMediaPublisher;
-import com.coderstower.socialmediapubisher.domain.security.OAuth2CredentialsManager;
 import com.coderstower.socialmediapubisher.domain.security.repository.OAuth1CredentialsRepository;
-import com.coderstower.socialmediapubisher.domain.security.repository.OAuth2CredentialsRepository;
-import com.coderstower.socialmediapubisher.application.socialmedia.linkedin.LinkedInPublisher;
-import com.coderstower.socialmediapubisher.application.socialmedia.twitter.TwitterPublisher;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.mail.MailSender;
 import org.springframework.web.client.RestTemplate;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
@@ -29,8 +27,8 @@ public class SpringPublisherFactory {
     }
 
     @Bean
-    public PostPublisher postPublisher(List<SocialMediaPublisher> socialMediaPublishers, PostRepository postRepository, Clock clock) {
-        return new PostPublisher(socialMediaPublishers, postRepository, clock);
+    public PostPublisher postPublisher(List<SocialMediaPublisher> socialMediaPublishers, PostRepository postRepository, Clock clock, MailSender mailSender, SocialMediaPublisherProperties socialMediaPublisherProperties) {
+        return new PostPublisher(socialMediaPublishers, postRepository, clock, mailSender, socialMediaPublisherProperties.getPost().getMail().getSenderEmail(), socialMediaPublisherProperties.getPost().getMail().getReceiverEmail());
     }
 
     @Bean

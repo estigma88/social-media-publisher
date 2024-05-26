@@ -8,8 +8,23 @@ spring:
   profiles:
     group:
       itest: linkedin
+  mail:
+    properties:
+      "[mail.smtp.auth]": true
+      "[mail.smtp.starttls.enable]": true
+      "[mail.smtp.connectiontimeout]": 5000
+      "[mail.smtp.timeout]": 3000
+      "[mail.smtp.writetimeout]": 5000
+    host: smtp.gmail.com
+    password: xxxxx
+    username: yyyyy
+    port: 587
 
 social-media-publisher:
+  post:
+    mail:
+      sender-email: sender@mail.com
+      receiver-email: receiver@mail.com
   linked-in:
     base-url: https://api.linkedin.com
   credentials:
