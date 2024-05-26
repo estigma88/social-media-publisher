@@ -8,13 +8,22 @@ spring:
   profiles:
     group:
       itest: linkedin
-  cloud:
-     aws:
-        ses:
-          region: eu-west-1
-          sourceArn: arn:aws:ses:eu-west-1:123456789012:identity/example.com
+  mail:
+    properties:
+      "[mail.smtp.auth]": true
+      "[mail.smtp.starttls.enable]": true
+      "[mail.smtp.connectiontimeout]": 5000
+      "[mail.smtp.timeout]": 3000
+      "[mail.smtp.writetimeout]": 5000
+    host: smtp.gmail.com
+    password: xxxxx
+    username: yyyyy
 
 social-media-publisher:
+  post:
+    mail:
+      sender-email: sender@mail.com
+      receiver-email: receiver@mail.com
   linked-in:
     base-url: https://api.linkedin.com
   credentials:

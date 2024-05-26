@@ -51,19 +51,16 @@ dependencyManagement {
 dependencies {
     implementation(libs.org.springframework.boot.spring.boot.starter.web)
     implementation(libs.org.springframework.boot.spring.boot.starter.security)
+    implementation(libs.org.springframework.boot.spring.boot.starter.mail)
     implementation(libs.org.springframework.boot.spring.boot.starter.oauth2.client)
     implementation(libs.org.twitter4j.twitter4j.core)
     implementation(libs.io.github.boostchicken.spring.data.dynamodb)
     implementation(libs.com.amazonaws.serverless.aws.serverless.java.container.springboot3)
 
-    implementation(platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.1.0"))
-    implementation("io.awspring.cloud:spring-cloud-aws-starter-ses")
-
-    testImplementation(libs.org.springframework.boot.spring.boot.starter.test)
-    testImplementation(libs.org.springframework.security.spring.security.test)
     itestImplementation(libs.org.springframework.cloud.spring.cloud.starter.contract.stub.runner)
     itestImplementation(libs.org.springframework.boot.spring.boot.starter.test)
     itestImplementation(libs.io.rest.assured.rest.assured)
+    itestImplementation(libs.org.mockito.mockito.core)
 
 }
 

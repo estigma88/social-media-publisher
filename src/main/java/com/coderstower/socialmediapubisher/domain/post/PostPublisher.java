@@ -21,14 +21,16 @@ public class PostPublisher {
     private final PostRepository postRepository;
     private final Clock clock;
     private final MailSender mailSender;
-    private final String emailToNotifyResult;
+    private final String senderEmail;
+    private final String receiverEmail;
 
-    public PostPublisher(List<SocialMediaPublisher> socialMediaPublishers, PostRepository postRepository, Clock clock, MailSender mailSender, String emailToNotifyResult) {
+    public PostPublisher(List<SocialMediaPublisher> socialMediaPublishers, PostRepository postRepository, Clock clock, MailSender mailSender, String senderEmail, String receiverEmail) {
         this.socialMediaPublishers = socialMediaPublishers;
         this.postRepository = postRepository;
         this.clock = clock;
         this.mailSender = mailSender;
-        this.emailToNotifyResult = emailToNotifyResult;
+        this.senderEmail = senderEmail;
+        this.receiverEmail = receiverEmail;
     }
 
     public Post publishNext(String group) {
@@ -47,7 +49,8 @@ public class PostPublisher {
                         .updatePublications(publishedPosts);
 
                 SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-                simpleMailMessage.setTo(emailToNotifyResult);
+                simpleMailMessage.setFrom(senderEmail);
+                simpleMailMessage.setTo(receiverEmail);
                 simpleMailMessage.setSubject("SocialMediaPublisher: Success publishing group " + group);
                 simpleMailMessage.setText(postUpdated.toString());
                 mailSender.send(simpleMailMessage);
@@ -58,13 +61,11 @@ public class PostPublisher {
                         .updatePublications(publishedPosts));
             }
         } catch (Exception e) {
-            PrintWriter stackTrace = new PrintWriter(new StringWriter());
-            e.printStackTrace(stackTrace);
-
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-            simpleMailMessage.setTo(emailToNotifyResult);
+            simpleMailMessage.setFrom(senderEmail);
+            simpleMailMessage.setTo(receiverEmail);
             simpleMailMessage.setSubject("SocialMediaPublisher: Error publishing group " + group);
-            simpleMailMessage.setText(stackTrace.toString());
+            simpleMailMessage.setText(e.getMessage());
             mailSender.send(simpleMailMessage);
 
             throw e;

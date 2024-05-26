@@ -12,9 +12,11 @@ com-amazonaws-serverless-aws-serverless-java-container-springboot3 = { module = 
 io-github-boostchicken-spring-data-dynamodb = { module = "io.github.boostchicken:spring-data-dynamodb", version.ref = "io-github-boostchicken-spring-data-dynamodb" }
 org-springframework-boot-spring-boot-starter-oauth2-client = { module = "org.springframework.boot:spring-boot-starter-oauth2-client" }
 org-springframework-boot-spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-starter-security"}
+org-springframework-boot-spring-boot-starter-mail = { module = "org.springframework.boot:spring-boot-starter-mail"}
 org-springframework-boot-spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 org-springframework-boot-spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
 org-springframework-security-spring-security-test = { module = "org.springframework.security:spring-security-test" }
 org-springframework-cloud-spring-cloud-starter-contract-stub-runner = { module = "org.springframework.cloud:spring-cloud-starter-contract-stub-runner" }
 io-rest-assured-rest-assured = { module = "io.rest-assured:rest-assured", version.ref = "io-rest-assured-rest-assured"}
+org-mockito-mockito-core = { module = "org.mockito:mockito-core"}
 org-twitter4j-twitter4j-core = { module = "org.twitter4j:twitter4j-core", version.ref = "org-twitter4j-twitter4j-core" }

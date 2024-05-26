@@ -6,8 +6,10 @@ import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
+import org.springframework.mail.MailSender;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -18,6 +20,9 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 @ContextConfiguration(classes = OverriddenConfiguration.class)
 @ExtendWith(ITestExtension.class)
 public abstract class MockedEdgesConfig {
+    @MockBean
+    protected MailSender mailSender;
+
     @RegisterExtension
     static WireMockExtension wm1 = WireMockExtension.newInstance()
             .options(
