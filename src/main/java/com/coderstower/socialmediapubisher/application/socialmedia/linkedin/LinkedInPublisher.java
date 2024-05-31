@@ -137,7 +137,7 @@ public class LinkedInPublisher implements SocialMediaPublisher {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.add("X-Restli-Protocol-Version", "2.0.0");
-        httpHeaders.add("LinkedIn-Version", "202304");
+        httpHeaders.add("LinkedIn-Version", "202404");
         httpHeaders.setBearerAuth(credentials.getAccessToken());
 
         HttpEntity<LinkedInShare> requestEntity = new HttpEntity<>(linkedInShare, httpHeaders);
@@ -155,7 +155,7 @@ public class LinkedInPublisher implements SocialMediaPublisher {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.add("X-Restli-Protocol-Version", "2.0.0");
-        httpHeaders.add("LinkedIn-Version", "202304");
+        httpHeaders.add("LinkedIn-Version", "202404");
         httpHeaders.setBearerAuth(credentials.getAccessToken());
 
         HttpEntity<Void> requestEntity = new HttpEntity<>(httpHeaders);
