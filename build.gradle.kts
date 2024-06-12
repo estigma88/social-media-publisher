@@ -65,7 +65,7 @@ dependencies {
 }
 
 group = "com.coderstower"
-version = "0.0.7-SNAPSHOT"
+version = "0.0.8-SNAPSHOT"
 description = "social-media-publisher"
 
 java {

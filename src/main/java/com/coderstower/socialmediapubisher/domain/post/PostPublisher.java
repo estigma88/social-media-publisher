@@ -9,8 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,7 +33,7 @@ public class PostPublisher {
 
     public Post publishNext(String group) {
         try{
-            ping(socialMediaPublishers);
+            ping(socialMediaPublishers, group);
 
             Post nextPost = postRepository.getNextToPublish(group)
                     .orElseThrow(() -> new IllegalStateException("There is not next post to publish"));
@@ -83,9 +81,9 @@ public class PostPublisher {
                 .collect(Collectors.toList());
     }
 
-    private void ping(List<SocialMediaPublisher> socialMediaPublishers) {
+    private void ping(List<SocialMediaPublisher> socialMediaPublishers, String group) {
         for (SocialMediaPublisher socialMediaPublisher : socialMediaPublishers) {
-            Acknowledge ping = socialMediaPublisher.ping();
+            Acknowledge ping = socialMediaPublisher.ping(group);
 
             if (!Acknowledge.Status.SUCCESS.equals(ping.getStatus())) {
                 throw new IllegalStateException("Ping to " + socialMediaPublisher.getName() + " failed: " + ping);

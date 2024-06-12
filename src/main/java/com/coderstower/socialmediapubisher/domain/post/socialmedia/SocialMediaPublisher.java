@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface SocialMediaPublisher {
     String getName();
-    Acknowledge ping();
+    Acknowledge ping(String group);
     List<Publication> publish(Post post);
 }
