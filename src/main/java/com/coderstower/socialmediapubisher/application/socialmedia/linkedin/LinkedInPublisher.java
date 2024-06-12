@@ -45,7 +45,7 @@ public class LinkedInPublisher implements SocialMediaPublisher {
     }
 
     @Override
-    public Acknowledge ping() {
+    public Acknowledge ping(String group) {
         List<OAuth2Credentials> credentials = oauth2CredentialsRepository.findAll();
 
         if (credentials.isEmpty()) {
@@ -53,6 +53,9 @@ public class LinkedInPublisher implements SocialMediaPublisher {
         }
 
         for (OAuth2Credentials credential : credentials) {
+            if (!credential.getAllowedGroups().contains(group)) {
+                continue;
+            }
             if (areCredentialsExpired(credential)) {
                 throw new UnauthorizedException("Unauthorized for " + name + " " + credential.getId() + ". Please login again here: " + loginURL.expand(name));
             }
@@ -68,7 +71,7 @@ public class LinkedInPublisher implements SocialMediaPublisher {
         List<OAuth2Credentials> credentials = oauth2CredentialsRepository.findAll()
                 .stream()
                 .filter(oAuth2Credentials -> oAuth2Credentials.getAllowedGroups().contains(post.getGroup()))
-                .collect(Collectors.toList());
+                .toList();
 
         List<Publication> publications = new ArrayList<>();
 

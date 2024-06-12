@@ -39,7 +39,7 @@ public class TwitterPublisher implements SocialMediaPublisher {
     }
 
     @Override
-    public Acknowledge ping() {
+    public Acknowledge ping(String group) {
         OAuth1Credentials credentials = oauth1CredentialsRepository.getCredentials(name)
                 .orElseThrow(() -> new IllegalArgumentException("The credentials for " + name + " doesn't exist"));
 
