@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class LinkedInPublisher implements SocialMediaPublisher {
@@ -29,14 +28,16 @@ public class LinkedInPublisher implements SocialMediaPublisher {
     private final Clock clock;
     private final UriTemplate loginURL;
     private final URI baseURL;
+    private final String version;
 
-    public LinkedInPublisher(String name, OAuth2CredentialsRepository oauth2CredentialsRepository, RestTemplate restTemplate, Clock clock, UriTemplate loginURL, URI baseURL) {
+    public LinkedInPublisher(String name, OAuth2CredentialsRepository oauth2CredentialsRepository, RestTemplate restTemplate, Clock clock, UriTemplate loginURL, URI baseURL, String version) {
         this.name = name;
         this.oauth2CredentialsRepository = oauth2CredentialsRepository;
         this.restTemplate = restTemplate;
         this.clock = clock;
         this.loginURL = loginURL;
         this.baseURL = baseURL;
+        this.version = version;
     }
 
     @Override
@@ -140,7 +141,7 @@ public class LinkedInPublisher implements SocialMediaPublisher {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.add("X-Restli-Protocol-Version", "2.0.0");
-        httpHeaders.add("LinkedIn-Version", "202404");
+        httpHeaders.add("LinkedIn-Version", version);
         httpHeaders.setBearerAuth(credentials.getAccessToken());
 
         HttpEntity<LinkedInShare> requestEntity = new HttpEntity<>(linkedInShare, httpHeaders);
@@ -154,11 +155,11 @@ public class LinkedInPublisher implements SocialMediaPublisher {
         return response.getHeaders().getFirst("X-RestLi-Id");
     }
 
-    private Profile getProfile(OAuth2Credentials credentials) {
+    public Profile getProfile(OAuth2Credentials credentials) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.add("X-Restli-Protocol-Version", "2.0.0");
-        httpHeaders.add("LinkedIn-Version", "202404");
+        httpHeaders.add("LinkedIn-Version", this.version);
         httpHeaders.setBearerAuth(credentials.getAccessToken());
 
         HttpEntity<Void> requestEntity = new HttpEntity<>(httpHeaders);

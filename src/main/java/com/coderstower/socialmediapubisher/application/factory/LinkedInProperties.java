@@ -8,4 +8,5 @@ import java.net.URI;
 @Builder
 public class LinkedInProperties {
     private final URI baseURL;
+    private final String version;
 }
