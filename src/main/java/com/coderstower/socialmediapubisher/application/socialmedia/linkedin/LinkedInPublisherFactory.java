@@ -17,7 +17,7 @@ public class LinkedInPublisherFactory {
 
     @Bean
     public LinkedInPublisher linkedInPublisher(OAuth2CredentialsRepository oauth2CredentialsRepository, RestTemplate restTemplate, Clock clock, SocialMediaPublisherProperties socialMediaPublisherProperties) {
-        return new LinkedInPublisher("linkedin", oauth2CredentialsRepository, restTemplate, clock, socialMediaPublisherProperties.getCredentials().getLoginUrl(), socialMediaPublisherProperties.getLinkedIn().getBaseURL());
+        return new LinkedInPublisher("linkedin", oauth2CredentialsRepository, restTemplate, clock, socialMediaPublisherProperties.getCredentials().getLoginUrl(), socialMediaPublisherProperties.getLinkedIn().getBaseURL(), socialMediaPublisherProperties.getLinkedIn().getVersion());
     }
 
     @Bean
